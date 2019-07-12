@@ -1,0 +1,19 @@
+{
+		"compilerOptions": {
+	    "module": "commonjs",
+	    "declaration": false,
+	    "outDir": "./lib",
+		"baseUrl": "src",
+	    "sourceMap": true,
+
+		"strict": true,
+		"strictNullChecks": false,
+	    "noImplicitAny": true,
+	    "moduleResolution": "node",
+		"target": "es6",
+	    "typeRoots": [ "node_modules/@types" ],
+
+	    "experimentalDecorators": true,
+	    "emitDecoratorMetadata": true
+	  }
+}
