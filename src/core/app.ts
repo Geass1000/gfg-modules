@@ -1,16 +1,16 @@
 import { Singleton } from './shared/singleton.base';
 import * as _ from 'lodash';
 
-import { Tree } from './elements/tree';
+import * as Modules from './modules/manager.builder';
 
 export class App extends Singleton {
 
-  public bootstrapModule(moduleClass: any) {
-    this.createTree(moduleClass);
+  public bootstrapModule(rootModule: any) {
+    this.initModuleSystem(rootModule);
   }
 
-  private createTree(rootElement: any) {
-    // const diTree = Tree.getInstance();
-    // diTree.create(rootElement);
+  private async initModuleSystem(rootModule: any) {
+    const moduleTreeBuilder = Modules.ManagerBuilder.getInstance();
+    await moduleTreeBuilder.build(rootModule);
   }
 }

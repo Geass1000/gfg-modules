@@ -1,3 +1,3 @@
 export * from './container';
-export * from '../elements/tree';
+export * from '../modules/tree';
 export * from '../token';
