@@ -3,9 +3,9 @@ import { Container } from '../di/container';
 import { Token } from '../token';
 import * as _ from 'lodash';
 
-export function Inject (token: Token) {
-  return (target: Object, propertyKey: string | symbol, paramIndex: number) => {
-    const diKey = _.isUndefined(token) || Reflect.getMetadata('design:type', target, propertyKey);
+export function Inject (token: Token): ParameterDecorator | PropertyDecorator {
+  return (target: any, propertyKey: string | symbol, paramIndex: number) => {
+    const diKey = token || Reflect.getMetadata('design:type', target, propertyKey);
 
     if (_.isUndefined(paramIndex)) {
       GfgHelper.setPropertyDeps(diKey, target, propertyKey);
