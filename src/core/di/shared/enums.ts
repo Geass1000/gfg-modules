@@ -1,7 +1,6 @@
 
-export enum ElementDataType {
+export enum ElementType {
   Class = 'class',
-  Ref = 'ref',
   Value = 'value',
   Factory = 'factory',
 }
