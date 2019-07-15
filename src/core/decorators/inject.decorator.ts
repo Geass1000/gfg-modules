@@ -7,11 +7,15 @@ export function Inject (token: Token) {
   return (target: Object, propertyKey: string | symbol, paramIndex: number) => {
     const diKey = _.isUndefined(token) || Reflect.getMetadata('design:type', target, propertyKey);
 
-    if (!_.isUndefined(paramIndex)) {
-      GfgHelper.setParameterDeps(diKey, target, paramIndex);
+    if (_.isUndefined(paramIndex)) {
+      GfgHelper.setPropertyDeps(diKey, target, propertyKey);
       return;
     }
 
-    GfgHelper.setPropertyDeps(diKey, target, propertyKey);
+    if (_.isNil(diKey)) {
+      throw new Error(`${target.name} (${paramIndex} -> ${token}). DI Key is required.`);
+    }
+
+    GfgHelper.setParameterDeps(diKey, target, paramIndex);
   };
 }
