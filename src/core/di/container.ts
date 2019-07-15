@@ -1,7 +1,8 @@
 import { GfgHelper } from './../shared/gfg.helper';
 import * as _ from 'lodash';
 
-import { Element } from 'core/shared/interfaces/gfg.interfaces';
+import { Element } from '../shared/interfaces/gfg.interfaces';
+import * as Shared from '../shared';
 
 export class Container {
   private elStorage: (Element.Provider | Element.Provider[])[];
@@ -14,19 +15,37 @@ export class Container {
     this.elStorage = [];
   }
 
-  // public bindClass(elKey: Element.Key): void {
-  //   const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, elKey);
+  public getDependencies (elKey: Element.Key) {
+    const isClassElement = GfgHelper.isClassElement(elKey);
+    if (!isClassElement) {
+      return null;
+    }
 
-  //   const injectedParams: Shared.Interfaces.Metadata.ParameterDep[] =
-  //     Reflect.getMetadata(Shared.Constants.Metadata.ParameterDeps, elKey);
-  //   const injectedProps: Shared.Interfaces.Metadata.PropertyDep[] =
-  //     Reflect.getMetadata(Shared.Constants.Metadata.PropertyDeps, elKey);
+    const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, elKey) || [];
 
-  //   const newClassParams = _.map(classParams, (value, index) => {
-  //     return _.isUndefined(injectedParams[index])
-  //       ? value : injectedParams[index];
-  //   });
-  // }
+    const injectedParams: Shared.Interfaces.Metadata.ParameterDep[] =
+      GfgHelper.getParameterDeps(elKey) || [];
+    const injectedProps: Shared.Interfaces.Metadata.PropertyDep[] =
+      GfgHelper.getPropertyDeps(elKey) || [];
+
+    const injectedClassParams = _.map(classParams, (classParam, index) => {
+      const injectedParam = _.find(injectedParams, [ 'index', index ]);
+      if (!_.isUndefined(injectedParam)) {
+        return injectedParam.value;
+      }
+
+      if (this.isNativeType(classParam)) {
+        throw new Error(`${elKey.name} (${index} -> ${classParam.name}). Native types not supported.`);
+      }
+
+      return classParam;
+    });
+
+    return {
+      params: injectedClassParams,
+      props: injectedProps,
+    };
+  }
 
   public bind (provider: any) {
     const isClassElement = GfgHelper.isClassElement(provider);
