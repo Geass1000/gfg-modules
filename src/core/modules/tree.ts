@@ -1,3 +1,4 @@
+import { PostorderIterator } from './interators/postorder.iterator';
 import * as _ from 'lodash';
 import { Observable, Subject } from 'rxjs';
 
@@ -15,13 +16,17 @@ export class Tree {
   ) { }
 
   public preorderTraversal () {
-    return new PreorderIterator(this.rootNode);
+    return new PreorderIterator(this.root);
   }
+
   public reversePreorderTraversal () {
-    return new ReversePreorderIterator(this.rootNode);
+    return new ReversePreorderIterator(this.root);
   }
-  public postorderTraversal (): any {
+
+  public postorderTraversal () {
+    return new PostorderIterator(this.root);
   }
+
   public inorderTraversal (): any {
   }
 }
