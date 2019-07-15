@@ -1,6 +1,11 @@
 import { Token } from '../../token';
 import { InjectableScope } from '../enums/injectable.enums';
 
+export interface Type<T> extends Function {
+  // tslint:disable-next-line
+  new (...args: any[]): any;
+}
+
 export namespace Element {
   export type Key = Token | any;
 
@@ -26,7 +31,9 @@ export namespace Element {
     }
   }
 
-  export type Provider = Provider.Class | Provider.Value | Provider.Factory | any;
+  export type UseProvider = Provider.Class | Provider.Value | Provider.Factory;
+  export type InjectableProvider = Type<any>;
+  export type Provider = UseProvider | InjectableProvider;
 }
 
 export interface Injectable {

@@ -6,7 +6,7 @@ import { Element } from '../shared/interfaces/gfg.interfaces';
 import * as Shared from '../shared';
 
 export class Container {
-  private elStorage: (Element.Provider | Element.Provider[])[];
+  private elStorage: (Element.UseProvider | Element.UseProvider[])[];
 
   static create (): Container {
     return new Container();
@@ -66,11 +66,11 @@ export class Container {
 
   private getElement (
     elKey: Element.Key,
-  ): Element.Provider | Element.Provider[] {
+  ): Element.UseProvider | Element.UseProvider[] {
     return _.find(this.elStorage, [ 'provide', elKey ]);
   }
 
-  private setElement (newEl: Element.Provider): void {
+  private setElement (newEl: Element.UseProvider): void {
     const els = this.getElement(newEl.provide);
     const index = _.findIndex(this.elStorage, [ 'provide', newEl.provide ]);
 
