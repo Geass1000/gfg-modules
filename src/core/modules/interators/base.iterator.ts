@@ -24,6 +24,11 @@ export class BaseIterator {
     this.stopNotif$ = null;
   }
 
+  stop () {
+    this.stopNotif$.next();
+    this.stopNotif$.complete();
+  }
+
   protected iterate (node: TreeNode): any {
   }
 }
