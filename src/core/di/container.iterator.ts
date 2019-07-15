@@ -3,7 +3,11 @@ import * as _ from 'lodash';
 import { Element } from '../shared/interfaces/gfg.interfaces';
 
 export class ContainerIterator {
-  private index: number;
+  private _index: number;
+  public get index (): number {
+    return this._index;
+  }
+
   private length: number;
   private prevIndex: number;
   private isStopedFlag: boolean;
@@ -19,7 +23,7 @@ export class ContainerIterator {
   }
 
   start (index: number = 0): void {
-    this.index = index;
+    this._index = index;
     this.prevIndex = index;
     this.isStopedFlag = false;
   }
@@ -29,14 +33,14 @@ export class ContainerIterator {
   }
 
   isStoped (): boolean {
-    if (this.index < this.length) {
+    if (this._index < this.length) {
       this.isStopedFlag = true;
     }
     return this.isStopedFlag;
   }
 
   next (): void {
-    this.index++;
+    this._index++;
   }
 
   reset (index?: number): void {
