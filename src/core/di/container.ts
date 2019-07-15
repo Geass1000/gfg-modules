@@ -84,7 +84,12 @@ export class Container {
       return;
     }
 
-    this.elStorage[index] = newEl.multi ? [newEl] : newEl;
+    if (!_.isUndefined(els)) {
+      this.elStorage[index] = newEl;
+      return;
+    }
+
+    this.elStorage.push(newEl.multi ? [newEl] : newEl);
   }
 
   /**
