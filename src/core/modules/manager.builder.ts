@@ -75,7 +75,7 @@ export class ManagerBuilder extends Singleton {
       .value();
 
     // Sets children of `current` module
-    node.addChildren(moduleNodes);
+    node.setChildren(moduleNodes);
 
     // Else fn will set a parent of `current` module
     // and return DITN of `current` module

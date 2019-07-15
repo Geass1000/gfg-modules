@@ -35,8 +35,8 @@ export class TreeNode {
    * @param  {TreeNode[]} children
    * @returns void
    */
-  public addChildren (children: TreeNode|TreeNode[]): void {
-    this._children = _.concat(this.children, children);
+  public setChildren (children: TreeNode[]): void {
+    this._children = [ ...children, ];
   }
 
   /**
