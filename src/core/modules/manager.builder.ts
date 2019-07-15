@@ -19,12 +19,12 @@ export class ManagerBuilder extends Singleton {
    * @param  {any} rootModule - class of the `root` module
    * @returns void
    */
-  public async build (rootModule: any): Promise<Manager> {
+  public build (rootModule: any): Manager {
     // Build application tree
     const appTree = this.buildAppTree(rootModule);
 
     // Get array of trees of global modules from app tree
-    const globalTrees: Tree[] = await this.extractGlobalModules(appTree);
+    const globalTrees: Tree[] = this.extractGlobalModules(appTree);
 
     // Create an instance of module manager
     const moduleManager = new Manager({ appTree, globalTrees, });
@@ -84,22 +84,22 @@ export class ManagerBuilder extends Singleton {
     return node;
   }
 
-  private async extractGlobalModules (tree: Tree): Promise<Tree[]> {
+  private extractGlobalModules (tree: Tree): Tree[] {
     const globalTrees: Tree[] = [];
 
-    return new Bluebird<Tree[]>((resolve, reject) => {
-      const iterator = tree.preorderTraversal();
-      iterator.getNotifier().subscribe((node) => {
-        if (!GfgHelper.isGlobalElement(node.value)) {
-          return;
-        }
+    const iterator = tree.preorderTraversal();
+    for (iterator.start(); !iterator.isStoped(); iterator.next()) {
+      const node = iterator.value;
+      if (!GfgHelper.isGlobalElement(node.value)) {
+        continue;
+      }
 
-        node.parent.removeChildren(node);
-        node.parent = null;
-        const globalTree = new Tree(node);
-        globalTrees.push(globalTree);
-      }, () => {}, () => { resolve(globalTrees); });
-      iterator.traverse();
-    });
+      node.parent.removeChildren(node);
+      node.parent = null;
+      const globalTree = new Tree(node);
+      globalTrees.push(globalTree);
+    }
+
+    return globalTrees;
   }
 }

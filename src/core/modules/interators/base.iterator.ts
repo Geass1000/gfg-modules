@@ -1,34 +1,39 @@
 import * as _ from 'lodash';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { TreeNode } from '../tree-node';
 
 export class BaseIterator {
-  protected notif$ = new Subject<TreeNode>();
-  protected stopNotif$: Subject<void>;
+  protected nodeStack: TreeNode[];
+
+  protected isStopedFlag: boolean;
+
+  protected _value: TreeNode;
+  public get value (): TreeNode {
+    return this._value;
+  }
+
   constructor (
-    private rootNode: TreeNode,
+    protected root: TreeNode,
   ) {}
 
-  getNotifier () {
-    this.stopNotif$ = new Subject<void>();
-    return this.notif$
-      .pipe(takeUntil(this.stopNotif$));
+  start (): void {
+    this.nodeStack = [ this.root ];
+    this.isStopedFlag = false;
+    this.next();
   }
 
-  traverse () {
-    this.iterate(this.rootNode);
-    this.stopNotif$.next();
-    this.stopNotif$.complete();
-    this.stopNotif$ = null;
+  stop (): void {
+    this.isStopedFlag = true;
   }
 
-  stop () {
-    this.stopNotif$.next();
-    this.stopNotif$.complete();
+  isStoped (): boolean {
+    return this.isStopedFlag;
   }
 
-  protected iterate (node: TreeNode): any {
+  next (): void {
+  }
+
+  reset (): void {
+    this.start();
   }
 }

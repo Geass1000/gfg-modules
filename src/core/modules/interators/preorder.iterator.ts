@@ -5,15 +5,17 @@ import { BaseIterator } from './base.iterator';
 
 export class PreorderIterator extends BaseIterator {
 
-  protected iterate (node: TreeNode): any {
-    if (this.stopNotif$.closed) {
+  next (): void {
+    if (!this.nodeStack.length) {
+      this.isStopedFlag = true;
       return;
     }
 
-    this.notif$.next(node);
+    const node = this.nodeStack.pop();
+    this._value = node;
 
-    _.forEach(node.children, (child) => {
-      this.iterate(child);
-    });
+    for (let i = node.children.length - 1; i >= 0; i--) {
+      this.nodeStack.push(node.children[i]);
+    }
   }
 }
