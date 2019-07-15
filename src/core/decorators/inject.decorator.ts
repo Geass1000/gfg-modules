@@ -7,7 +7,7 @@ export function Inject (token: Token) {
   return (target: Object, propertyKey: string | symbol, paramIndex: number) => {
     const diKey = _.isUndefined(token) || Reflect.getMetadata('design:type', target, propertyKey);
 
-    if (paramIndex === 0) {
+    if (!_.isUndefined(paramIndex)) {
       GfgHelper.setParameterDeps(diKey, target, paramIndex);
       return;
     }
