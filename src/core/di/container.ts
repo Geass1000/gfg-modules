@@ -64,4 +64,15 @@ export class Container {
 
     this.elStorage[index] = newEl.multi ? [newEl] : newEl;
   }
+
+  /**
+   * Checks the metatype.
+   * If metatype is a `native` type method will return `true'.
+   *
+   * @return {boolean}
+   */
+  private isNativeType (metatype: any): boolean {
+    const types: any[] = [ String, Boolean, Number, Object ];
+    return _.includes(types, metatype);
+  }
 }
