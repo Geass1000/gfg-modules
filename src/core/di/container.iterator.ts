@@ -33,7 +33,7 @@ export class ContainerIterator {
   }
 
   isStoped (): boolean {
-    if (this._index < this.length) {
+    if (this._index >= this.length) {
       this.isStopedFlag = true;
     }
     return this.isStopedFlag;
