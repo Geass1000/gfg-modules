@@ -1,3 +1,4 @@
+import { ElementType } from './shared/enums';
 import { ContainerIterator } from './container.iterator';
 import { GfgHelper } from './../shared/gfg.helper';
 import * as _ from 'lodash';
@@ -34,10 +35,36 @@ export class Container {
     });
   }
 
-  private getElement (
+  public setElementFn (elKey: Element.Key, elFn: () => any): void {
+    throw new Error('Not implemented yet');
+  }
+
+  public getElementFn (elKey: Element.Key): any {
+    throw new Error('Not implemented yet');
+  }
+
+  public getElement (
     elKey: Element.Key,
   ): Element.UseProvider | Element.UseProvider[] {
     return _.find(this.elStorage, [ 'provide', elKey ]);
+  }
+
+  public getElementType (
+    elKey: Element.Key,
+  ): ElementType {
+    const el = this.getElement(elKey);
+
+    if (!_.has(el, 'useClass')) {
+      return ElementType.Class;
+    }
+    if (!_.has(el, 'useValue')) {
+      return ElementType.Value;
+    }
+    if (!_.has(el, 'useFactory')) {
+      return ElementType.Factory;
+    }
+
+    throw new Error('Unknown type of DI Element');
   }
 
   private setElement (newEl: Element.UseProvider): void {
