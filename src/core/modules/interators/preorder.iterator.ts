@@ -12,10 +12,6 @@ export class PreorderIterator extends BaseIterator {
 
     this.notif$.next(node);
 
-    if (!node.children.length) {
-      return;
-    }
-
     _.forEach(node.children, (child) => {
       this.iterate(child);
     });

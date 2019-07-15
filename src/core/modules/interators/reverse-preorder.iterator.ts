@@ -13,9 +13,6 @@ export class ReversePreorderIterator extends BaseIterator {
     this.notif$.next(node);
 
     const childrenLength = node.children.length;
-    if (!childrenLength) {
-      return;
-    }
 
     for (let i = childrenLength - 1; i >= 0; i--) {
       this.iterate(node.children[i]);
