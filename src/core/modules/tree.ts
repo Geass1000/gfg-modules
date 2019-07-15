@@ -5,19 +5,19 @@ import { TreeNode } from './tree-node';
 import { PreorderIterator } from './interators/preorder.iterator';
 
 export class Tree {
-  public get root(): TreeNode {
+  public get root (): TreeNode {
     return this.rootNode;
   }
 
-  constructor(
+  constructor (
     private rootNode: TreeNode,
   ) { }
 
-  public preorderTraversal() {
+  public preorderTraversal () {
     return new PreorderIterator(this.rootNode);
   }
-  public postorderTraversal(): any {
+  public postorderTraversal (): any {
   }
-  public inorderTraversal(): any {
+  public inorderTraversal (): any {
   }
 }

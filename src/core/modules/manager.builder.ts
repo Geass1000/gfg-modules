@@ -19,8 +19,8 @@ export class ManagerBuilder extends Singleton {
    * @param  {any} rootModule - class of the `root` module
    * @returns void
    */
-  public async build(rootModule: any): Promise<Manager> {
-    // Build application tree 
+  public async build (rootModule: any): Promise<Manager> {
+    // Build application tree
     const appTree = this.buildAppTree(rootModule);
 
     // Get array of trees of global modules from app tree
@@ -37,7 +37,7 @@ export class ManagerBuilder extends Singleton {
    * @param  {any} rootModule - class of the `root` module
    * @returns void
    */
-  public buildAppTree(rootModule: any): Tree {
+  public buildAppTree (rootModule: any): Tree {
     // Creates DI Tree for `root` module and global DITNs
     const rootNode = this.buildAppTreeNodes(null, rootModule);
     return new Tree(rootNode);
@@ -50,12 +50,12 @@ export class ManagerBuilder extends Singleton {
    * 3. Visits `providers` and `components` lists of `current` module.
    * 4. Sets all children (modules, providers and components).
    * 5. Sets `current` module as `global` or returns DITN for `current` module.
-   * 
+   *
    * @param  {TreeNode} parentModule - DITN of the parent
    * @param  {any} curModule - class of the `module`
    * @returns TreeNode
    */
-  private buildAppTreeNodes(parentModule: TreeNode, curModule: any): TreeNode {
+  private buildAppTreeNodes (parentModule: TreeNode, curModule: any): TreeNode {
     // Gets the config of `current` module and creates DITN for him
     const moduleConfig: GfgInterfaces.Module = GfgHelper.getElementConfig(curModule);
     const diContainer = Container.create();
@@ -83,7 +83,7 @@ export class ManagerBuilder extends Singleton {
     return node;
   }
 
-  private async extractGlobalModules(tree: Tree): Promise<Tree[]> {
+  private async extractGlobalModules (tree: Tree): Promise<Tree[]> {
     const globalTrees: Tree[] = [];
 
     return new Bluebird<Tree[]>((resolve, reject) => {
@@ -92,7 +92,7 @@ export class ManagerBuilder extends Singleton {
         if (!GfgHelper.isGlobalElement(node.value)) {
           return;
         }
-  
+
         node.parent.removeChildren(node);
         node.parent = null;
         const globalTree = new Tree(node);

@@ -4,7 +4,7 @@ export class Singleton {
 
   // protected constructor () { ; }
 
-  static getInstance<T extends typeof Singleton>(this: T): InstanceType<T> {
+  static getInstance<T extends typeof Singleton> (this: T): InstanceType<T> {
     if (!this.instance) {
       this.instance = new this();
     }

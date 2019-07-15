@@ -23,14 +23,14 @@ export class Container {
   //     Reflect.getMetadata(Shared.Constants.Metadata.PropertyDeps, elKey);
 
   //   const newClassParams = _.map(classParams, (value, index) => {
-  //     return _.isUndefined(injectedParams[index]) 
+  //     return _.isUndefined(injectedParams[index])
   //       ? value : injectedParams[index];
   //   });
   // }
 
   public bind (provider: any) {
     const isClassElement = GfgHelper.isClassElement(provider);
-    
+
     if (!isClassElement) {
       this.setElement(provider);
       return;
@@ -42,13 +42,13 @@ export class Container {
     });
   }
 
-  private getElement(
+  private getElement (
     elKey: Element.Key,
   ): Element.Provider | Element.Provider[] {
     return _.find(this.elStorage, [ 'provide', elKey ]);
   }
 
-  private setElement(newEl: Element.Provider): void {
+  private setElement (newEl: Element.Provider): void {
     const els = this.getElement(newEl.provide);
     const index = _.findIndex(this.elStorage, [ 'provide', newEl.provide ]);
 

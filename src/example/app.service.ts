@@ -4,6 +4,6 @@ import * as Gfg from '../core';
 @Gfg.Injectable()
 export class AppService {
 
-    constructor(private logger: LoggerService) { ; }
+    constructor (private logger: LoggerService) {  }
 }
 

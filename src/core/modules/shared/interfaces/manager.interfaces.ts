@@ -1,4 +1,4 @@
-import { Tree } from "../../tree";
+import { Tree } from '../../tree';
 
 export interface Config {
   appTree: Tree;

@@ -1,4 +1,4 @@
-import { Token } from "../token";
+import { Token } from '../token';
 import * as Constants from './constants';
 import * as Interfaces from './interfaces';
 
@@ -7,11 +7,11 @@ export class GfgHelper {
    * Property Deps
    */
 
-  static getPropertyDeps(target: any): Interfaces.Metadata.PropertyDep[] {
+  static getPropertyDeps (target: any): Interfaces.Metadata.PropertyDep[] {
     return Reflect.getMetadata(Constants.Metadata.PropertyDeps, target);
   }
 
-  static setPropertyDeps(value: Token | any, target: any, propertyKey: string | symbol) {
+  static setPropertyDeps (value: Token | any, target: any, propertyKey: string | symbol) {
     const oldDeps = this.getPropertyDeps(target) || [];
     const newDep: Interfaces.Metadata.PropertyDep = {
       key: propertyKey,
@@ -25,11 +25,11 @@ export class GfgHelper {
    * Parameter Deps
    */
 
-  static getParameterDeps<T>(target: any): Interfaces.Metadata.ParameterDep[] {
+  static getParameterDeps<T> (target: any): Interfaces.Metadata.ParameterDep[] {
     return Reflect.getMetadata(Constants.Metadata.ParameterDeps, target);
   }
 
-  static setParameterDeps(value: Token | any, target: any, index: number) {
+  static setParameterDeps (value: Token | any, target: any, index: number) {
     const oldDeps = this.getPropertyDeps(target) || [];
     const newDep: Interfaces.Metadata.ParameterDep = {
       index: index,
@@ -43,27 +43,27 @@ export class GfgHelper {
    * Config Deps
    */
 
-  static getElementConfig<T>(target: any): T {
+  static getElementConfig<T> (target: any): T {
     return Reflect.getMetadata(Constants.Metadata.ElementConfig, target);
   }
 
-  static setElementConfig(config: any, target: any): void {
+  static setElementConfig (config: any, target: any): void {
     Reflect.defineMetadata(Constants.Metadata.ElementConfig, config, target);
   }
 
-  static setGlobalElement(target: any): void {
+  static setGlobalElement (target: any): void {
     Reflect.defineMetadata(Constants.Metadata.GlobalElement, true, target);
   }
 
-  static isGlobalElement(target: any): boolean {
+  static isGlobalElement (target: any): boolean {
     return !!Reflect.getMetadata(Constants.Metadata.GlobalElement, target);
   }
 
-  static setClassElement(target: any): void {
+  static setClassElement (target: any): void {
     Reflect.defineMetadata(Constants.Metadata.ClassElement, true, target);
   }
 
-  static isClassElement(target: any): boolean {
+  static isClassElement (target: any): boolean {
     return !!Reflect.getMetadata(Constants.Metadata.ClassElement, target);
   }
 }

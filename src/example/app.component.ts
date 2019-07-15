@@ -7,13 +7,13 @@ import * as Gfg from '../core';
 })
 export class AppComponent {
   private hi: string = `asd`;
-  constructor(
-    // @Gfg.Inject(`Hello!`) private hello: string, 
+  constructor (
+    // @Gfg.Inject(`Hello!`) private hello: string,
     private logger: LoggerService,
     private appService: AppService
   ) { }
 
-  public helloWorld() { ; }
+  public helloWorld () {  }
 
-  private pHelloWorld() { ; }
+  private pHelloWorld () {  }
 }

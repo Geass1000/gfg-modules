@@ -6,12 +6,12 @@ import * as Gfg from '../../core';
   providers: [LoggerService],
 })
 export class ProfileComponent {
-  constructor(
+  constructor (
     private logger: LoggerService,
     private http: HttpService
   ) {}
 
-  public helloWorld() { ; }
+  public helloWorld () {  }
 
-  private pHelloWorld() { ; }
+  private pHelloWorld () {  }
 }

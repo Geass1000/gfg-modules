@@ -1,6 +1,11 @@
 import { Interfaces } from './shared';
 
 export class Manager {
-  constructor(private config: Interfaces.Manager.Config) {}
+  constructor (private config: Interfaces.Manager.Config) {}
 
+  init () {}
+
+  initGlobalModules () {}
+
+  initAppModules () {}
 }

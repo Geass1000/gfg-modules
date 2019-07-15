@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import { TreeNode } from "../tree-node";
+import { TreeNode } from '../tree-node';
 
 export class BaseIterator {
   protected notif$ = new Subject<TreeNode>();
   protected stopNotif$: Subject<void>;
-  constructor(
+  constructor (
     private rootNode: TreeNode,
   ) {}
 
@@ -22,8 +22,8 @@ export class BaseIterator {
     this.stopNotif$.next();
     this.stopNotif$.complete();
     this.stopNotif$ = null;
-  } 
+  }
 
-  protected iterate(node: TreeNode): any {
+  protected iterate (node: TreeNode): any {
   }
 }

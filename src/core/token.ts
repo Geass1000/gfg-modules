@@ -1,7 +1,7 @@
 
 export class Token {
 
-  static create() {
+  static create () {
     return new Token();
   }
 }

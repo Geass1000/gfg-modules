@@ -2,8 +2,8 @@ import { Token } from '../../token';
 
 export namespace Element {
   export type Key = Token | any;
-  
-  export type Factory = (...restDeps: any[]) => any; 
+
+  export type Factory = (...restDeps: any[]) => any;
 
   export namespace Provider {
     export interface Base {
@@ -14,11 +14,11 @@ export namespace Element {
     export interface Value extends Base {
       useValue: any;
     }
-    
+
     export interface Class extends Base {
       useClass: any;
     }
-    
+
     export interface Factory extends Base {
       useFactory: Factory;
       inject?: any[];
