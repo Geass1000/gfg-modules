@@ -1,6 +1,30 @@
 const gulp = require("gulp");
 const ts = require("gulp-typescript");
+const tslint = require("gulp-tslint");
+const del = require("del");
+
 const tsProject = ts.createProject('tsconfig.json');
+
+gulp.task('clean:dist', function () {
+  return del('./dist/*', { force: true });
+});
+
+const lintConfig = {
+  configuration: "./tslint.json",
+  formatter: "verbose",
+};
+const lintReportConfig = {
+  emitError: false,
+  summarizeFailureOutput: true,
+  reportLimit: 10,
+};
+
+gulp.task('tslint:dev', function () {
+  return gulp.src('./src/**/*.ts')
+    .pipe(tslint(lintConfig))
+    .pipe(tslint.report(lintReportConfig));
+});
+
 
 const spawn = require('child_process').spawn;
 let node;
@@ -20,13 +44,15 @@ process.on('exit', function() {
 });
 
 
-gulp.task("ts-comp", function () {
-    var tsResult = gulp.src("src/**/*.ts")
-        .pipe(tsProject());
-    return tsResult.js.pipe(gulp.dest("dist"));
-});
+gulp.task('build', gulp.series(function () {
+  return gulp.src('./src/**/*.ts')
+    .pipe(tsProject())
+    .pipe(gulp.dest('./dist'));
+}));
 
-gulp.task('watch', gulp.series('ts-comp', 'server', function(done) {
-  gulp.watch(['./src/**/*.ts', './src/**/**/*.ts'], gulp.series('ts-comp', 'server'));
+gulp.task('build:dev', gulp.series('tslint:dev', 'build'));
+
+gulp.task('watch', gulp.series('clean:dist', 'build:dev', 'server', function(done) {
+  gulp.watch(['./src/**/*.ts', './src/**/**/*.ts'], gulp.series('build:dev', 'server'));
 	done();
 }));
