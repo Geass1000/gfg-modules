@@ -9,7 +9,7 @@ export class ContainerIterator {
   private isStopedFlag: boolean;
 
   public get value (): Element.Provider | Element.Provider[] {
-    return null;
+    return this.els[this.index];
   }
 
   constructor (
