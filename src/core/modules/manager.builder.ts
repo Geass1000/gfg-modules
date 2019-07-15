@@ -74,8 +74,9 @@ export class ManagerBuilder extends Singleton {
       .filter((module) => !_.isNull(module))
       .value();
 
+    const reverseModuleNodes = _.reverse([ ...moduleNodes, ]);
     // Sets children of `current` module
-    node.setChildren(moduleNodes);
+    node.setChildren(reverseModuleNodes);
 
     // Else fn will set a parent of `current` module
     // and return DITN of `current` module
