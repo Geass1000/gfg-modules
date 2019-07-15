@@ -69,7 +69,7 @@ export class GfgHelper {
     return !!Reflect.getMetadata(Constants.Metadata.ClassElement, target);
   }
 
-  static getClassDependencies (elKey: Interfaces.Gfg.Element.Key) {
+  static getClassDependencies (elKey: Interfaces.Element.Key) {
     const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, elKey) || [];
 
     const config: Interfaces.Gfg.Injectable =
