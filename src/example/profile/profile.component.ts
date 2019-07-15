@@ -2,9 +2,7 @@ import { LoggerService } from './../core/logger.service';
 import { HttpService } from './../core/http.service';
 import * as Gfg from '../../core';
 
-@Gfg.Injectable({
-  providers: [LoggerService],
-})
+@Gfg.Injectable()
 export class ProfileComponent {
   constructor (
     private logger: LoggerService,

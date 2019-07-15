@@ -1,9 +1,7 @@
 import { LoggerService } from './../logger.service';
 import * as Gfg from '../../../core';
 
-@Gfg.Injectable({
-    providers: [ LoggerService ],
-})
+@Gfg.Injectable()
 export class AuthService {
 }
 

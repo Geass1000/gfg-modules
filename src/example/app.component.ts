@@ -2,9 +2,7 @@ import { LoggerService } from './core/logger.service';
 import { AppService } from './app.service';
 import * as Gfg from '../core';
 
-@Gfg.Injectable({
-  providers: [LoggerService]
-})
+@Gfg.Injectable()
 export class AppComponent {
   private hi: string = `asd`;
   constructor (
