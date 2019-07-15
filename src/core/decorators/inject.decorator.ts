@@ -8,7 +8,7 @@ export function Inject (token: Token): ParameterDecorator | PropertyDecorator {
     const diKey = token || Reflect.getMetadata('design:type', target, propertyKey);
 
     if (_.isUndefined(paramIndex)) {
-      GfgHelper.setPropertyDeps(diKey, target, propertyKey);
+      GfgHelper.setPropertyDeps(diKey, target.constructor, propertyKey);
       return;
     }
 
