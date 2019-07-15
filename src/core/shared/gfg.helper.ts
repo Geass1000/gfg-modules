@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import { Token } from '../token';
 import * as Constants from './constants';
 import * as Interfaces from './interfaces';
@@ -65,5 +67,46 @@ export class GfgHelper {
 
   static isClassElement (target: any): boolean {
     return !!Reflect.getMetadata(Constants.Metadata.ClassElement, target);
+  }
+
+  static getClassDependencies (elKey: Interfaces.Gfg.Element.Key) {
+    const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, elKey) || [];
+
+    const config: Interfaces.Gfg.Injectable =
+      GfgHelper.getElementConfig(elKey) || {};
+    const injectedParams: Interfaces.Metadata.ParameterDep[] =
+      GfgHelper.getParameterDeps(elKey) || [];
+    const injectedProps: Interfaces.Metadata.PropertyDep[] =
+      GfgHelper.getPropertyDeps(elKey) || [];
+
+    const injectedClassParams = _.map(classParams, (classParam, index) => {
+      const injectedParam = _.find(injectedParams, [ 'index', index ]);
+      if (!_.isUndefined(injectedParam)) {
+        return injectedParam.value;
+      }
+
+      if (this.isNativeType(classParam)) {
+        throw new Error(`${elKey.name} (${index} -> ${classParam.name}). Native types not supported.`);
+      }
+
+      return classParam;
+    });
+
+    return {
+      config: config,
+      params: injectedClassParams,
+      props: injectedProps,
+    };
+  }
+
+  /**
+   * Checks the metatype.
+   * If metatype is a `native` type method will return `true'.
+   *
+   * @return {boolean}
+   */
+  static isNativeType (metatype: any): boolean {
+    const types: any[] = [ String, Boolean, Number, Object ];
+    return _.includes(types, metatype);
   }
 }
