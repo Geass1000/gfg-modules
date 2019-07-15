@@ -3,13 +3,13 @@ import * as _ from 'lodash';
 
 import { Interfaces } from './shared';
 
-import * as DI from '../di/container';
+import * as DI from '../di';
 import * as Shared from '../shared';
 import { TreeNode } from './tree-node';
 import { Tree } from './tree';
 import * as DIInterfaces from './../di/shared/interfaces';
 import { GfgHelper } from '../shared/gfg.helper';
-import { ElementType } from '../di/shared/enums';
+import { ProviderType } from '../shared/enums/element.enums';
 
 export class Manager {
   constructor (private config: Interfaces.Manager.Config) {}
@@ -53,7 +53,7 @@ export class Manager {
     const injectDeps = el.inject || [];
 
     const factoryArgs: any[] = _.map(injectDeps, (injectDep) => {
-      return this.createDependency(node, injectDep)();
+      return this.createDependency(node, injectDep);
     });
 
     const factoryResult = el.useFactory(...factoryArgs);
@@ -70,11 +70,11 @@ export class Manager {
     const deps = GfgHelper.getClassDependencies(el.useClass);
 
     const params: any[] = _.map(deps.params, (param) => {
-      return this.createDependency(node, param)();
+      return this.createDependency(node, param);
     });
 
     const props: any[] = _.map(deps.props, (prop) => {
-      return this.createDependency(node, prop.value)();
+      return this.createDependency(node, prop.value);
     });
 
     const createClassFn = () => {
@@ -98,7 +98,10 @@ export class Manager {
     }
   }
 
-  createDependency (node: TreeNode, elKey: Shared.Interfaces.Element.Key): DIInterfaces.ElementFactory {
+  createDependency (
+    node: TreeNode,
+    elKey: Shared.Interfaces.Element.Key,
+  ): any | any[] {
     const tree = new Tree(node);
 
     const trees = _.unionBy([tree], this.config.globalTrees, 'value');
@@ -112,20 +115,29 @@ export class Manager {
       }
     }
 
-    let newDepFn: any;
-    // switch (depType) {
-    //   case ElementType.Value:
-    //     newDepFn = this.initValueElement(dep as Element.Provider.Value);
-    //     break;
-    //   case ElementType.Factory:
-    //     newDepFn = this.initFactoryElement(node, dep as Element.Provider.Factory);
-    //     break;
-    //   case ElementType.Class:
-    //     newDepFn = this.initClassElement(node, dep as Element.Provider.Class);
-    //     break;
-    // }
-    // activeNode.container.setElementFn(elKey, newDepFn);
-    return newDepFn;
+    const elements = activeNode.container.getElements(elKey);
+
+    const deps = _.map(elements, (element) => {
+      if (!_.isNull(element.factory)) {
+        return element.factory();
+      }
+      const newFactory = this.createDependencyFactory(activeNode, element);
+      element.factory = newFactory;
+      return newFactory();
+    });
+
+    return deps.length === 1 ? deps[0] : deps;
+  }
+
+  createDependencyFactory (node: TreeNode, element: DI.Element) {
+    switch (element.type) {
+      case ProviderType.Value:
+        return this.initValueElement(element.config as Shared.Interfaces.Element.Provider.Value);
+      case ProviderType.Factory:
+        return this.initFactoryElement(node, element.config as Shared.Interfaces.Element.Provider.Factory);
+      case ProviderType.Class:
+        return this.initClassElement(node, element.config as Shared.Interfaces.Element.Provider.Class);
+    }
   }
 
   findDependency (
