@@ -23,6 +23,8 @@ export class Container {
 
     const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, elKey) || [];
 
+    const config: Shared.Interfaces.Gfg.Injectable =
+      GfgHelper.getElementConfig(elKey) || {};
     const injectedParams: Shared.Interfaces.Metadata.ParameterDep[] =
       GfgHelper.getParameterDeps(elKey) || [];
     const injectedProps: Shared.Interfaces.Metadata.PropertyDep[] =
@@ -42,6 +44,7 @@ export class Container {
     });
 
     return {
+      config: config,
       params: injectedClassParams,
       props: injectedProps,
     };
