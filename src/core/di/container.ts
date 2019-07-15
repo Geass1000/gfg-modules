@@ -1,3 +1,4 @@
+import { ContainerIterator } from './container.iterator';
 import { GfgHelper } from './../shared/gfg.helper';
 import * as _ from 'lodash';
 
@@ -10,17 +11,16 @@ export class Container {
   static create (): Container {
     return new Container();
   }
-
   private constructor () {
     this.elStorage = [];
   }
 
-  public getDependencies (elKey: Element.Key) {
-    const isClassElement = GfgHelper.isClassElement(elKey);
-    if (!isClassElement) {
-      return null;
-    }
+  public getIterator (): ContainerIterator {
+    const iterator = new ContainerIterator(this.elStorage);
+    return iterator;
+  }
 
+  public getClassDependencies (elKey: Element.Key) {
     const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, elKey) || [];
 
     const config: Shared.Interfaces.Gfg.Injectable =
