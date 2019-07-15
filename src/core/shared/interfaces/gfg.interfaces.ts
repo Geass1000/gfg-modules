@@ -3,7 +3,7 @@ import { Token } from '../../token';
 export namespace Element {
   export type Key = Token | any;
 
-  export type Factory = (...restDeps: any[]) => any;
+  export type FactoryFn = (...restDeps: any[]) => any;
 
   export namespace Provider {
     export interface Base {
@@ -20,7 +20,7 @@ export namespace Element {
     }
 
     export interface Factory extends Base {
-      useFactory: Factory;
+      useFactory: FactoryFn;
       inject?: any[];
     }
   }
