@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Element } from '../shared/interfaces/gfg.interfaces';
+import { Element } from './element';
 
 export class ContainerIterator {
   private _index: number;
@@ -12,12 +12,12 @@ export class ContainerIterator {
   private prevIndex: number;
   private isStopedFlag: boolean;
 
-  public get value (): Element.Provider | Element.Provider[] {
+  public get value (): Element {
     return this.els[this.index];
   }
 
   constructor (
-    private els: (Element.Provider | Element.Provider[])[],
+    private els: Element[],
   ) {
     this.length = els.length;
   }

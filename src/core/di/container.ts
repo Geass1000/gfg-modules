@@ -1,91 +1,60 @@
-import { ElementType } from './shared/enums';
-import { ContainerIterator } from './container.iterator';
-import { GfgHelper } from './../shared/gfg.helper';
 import * as _ from 'lodash';
+import { GfgHelper } from './../shared/gfg.helper';
 
-import { Element } from '../shared/interfaces/gfg.interfaces';
-import * as Shared from '../shared';
+import { Element } from './element';
+import * as ElementInterfaces from '../shared/interfaces/element.interfaces';
+import { ContainerIterator } from './container.iterator';
+import * as Interfaces from './shared/interfaces';
 
 export class Container {
-  private elStorage: (Element.UseProvider | Element.UseProvider[])[];
+  private storage: Element[];
 
   static create (): Container {
     return new Container();
   }
   private constructor () {
-    this.elStorage = [];
+    this.storage = [];
   }
 
   public getIterator (): ContainerIterator {
-    const iterator = new ContainerIterator(this.elStorage);
+    const iterator = new ContainerIterator(this.storage);
     return iterator;
   }
 
-  public bind (provider: any) {
-    const isClassElement = GfgHelper.isClassElement(provider);
+  public bind (provider: ElementInterfaces.Provider) {
+    const element = new Element(provider);
 
-    if (!isClassElement) {
-      this.setElement(provider);
-      return;
-    }
+    this.setElement(element);
+  }
 
-    this.setElement({
-      provide: provider,
-      useClass: provider,
+  public getElements (
+    elKey: ElementInterfaces.Key,
+  ): Element[] {
+    const elements = _.filter(this.storage, (element) => {
+      return element.key === elKey;
     });
+    return elements;
   }
 
-  public setElementFn (elKey: Element.Key, elFn: () => any): void {
-    throw new Error('Not implemented yet');
-  }
+  private setElement (newElement: Element): void {
+    const elements = this.getElements(newElement.key);
 
-  public getElementFn (elKey: Element.Key): any {
-    throw new Error('Not implemented yet');
-  }
-
-  public getElement (
-    elKey: Element.Key,
-  ): Element.UseProvider | Element.UseProvider[] {
-    return _.find(this.elStorage, [ 'provide', elKey ]);
-  }
-
-  public getElementType (
-    elKey: Element.Key,
-  ): ElementType {
-    const el = this.getElement(elKey);
-
-    if (!_.has(el, 'useClass')) {
-      return ElementType.Class;
-    }
-    if (!_.has(el, 'useValue')) {
-      return ElementType.Value;
-    }
-    if (!_.has(el, 'useFactory')) {
-      return ElementType.Factory;
-    }
-
-    throw new Error('Unknown type of DI Element');
-  }
-
-  private setElement (newEl: Element.UseProvider): void {
-    const els = this.getElement(newEl.provide);
-    const index = _.findIndex(this.elStorage, [ 'provide', newEl.provide ]);
-
-    if ((newEl.multi && !_.isUndefined(els) && !_.isArray(els))
-      || (!newEl.multi && _.isArray(els))) {
-      throw new Error (`Mixing multi and non multi provider is not possible for token ${newEl.provide}`);
-    }
-
-    if (_.isArray(els)) {
-      this.elStorage[index] = _.concat(els, newEl);
+    if (!elements.length) {
+      this.storage.push(newElement);
       return;
     }
 
-    if (!_.isUndefined(els)) {
-      this.elStorage[index] = newEl;
+    const multiToSingle = newElement.config.multi && !elements[0].config.multi;
+    const singleToMulti = !newElement.config.multi && elements[0].config.multi;
+    if (multiToSingle || singleToMulti) {
+      throw new Error (`Mixing multi and non multi provider is not possible for token ${newElement.key}`);
+    }
+
+    if (!newElement.config.multi) {
+      this.storage = _.unionBy([ newElement ], elements, 'key');
       return;
     }
 
-    this.elStorage.push(newEl.multi ? [newEl] : newEl);
+    this.storage.push(newElement);
   }
 }

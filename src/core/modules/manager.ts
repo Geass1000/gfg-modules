@@ -4,10 +4,10 @@ import * as _ from 'lodash';
 import { Interfaces } from './shared';
 
 import * as DI from '../di/container';
-import { Element } from '../shared/interfaces/gfg.interfaces';
+import * as Shared from '../shared';
 import { TreeNode } from './tree-node';
 import { Tree } from './tree';
-import { ElementFunction } from './../di/shared/interfaces';
+import * as DIInterfaces from './../di/shared/interfaces';
 import { GfgHelper } from '../shared/gfg.helper';
 import { ElementType } from '../di/shared/enums';
 
@@ -36,7 +36,9 @@ export class Manager {
     }
   }
 
-  initValueElement (el: Element.Provider.Value): ElementFunction {
+  initValueElement (
+    el: Shared.Interfaces.Element.Provider.Value,
+  ): DIInterfaces.ElementFactory {
     const value = el.useValue;
 
     return () => {
@@ -44,7 +46,10 @@ export class Manager {
     };
   }
 
-  initFactoryElement (node: TreeNode, el: Element.Provider.Factory): ElementFunction {
+  initFactoryElement (
+    node: TreeNode,
+    el: Shared.Interfaces.Element.Provider.Factory,
+  ): DIInterfaces.ElementFactory {
     const injectDeps = el.inject || [];
 
     const factoryArgs: any[] = _.map(injectDeps, (injectDep) => {
@@ -58,7 +63,10 @@ export class Manager {
     };
   }
 
-  initClassElement (node: TreeNode, el: Element.Provider.Class): ElementFunction {
+  initClassElement (
+    node: TreeNode,
+    el: Shared.Interfaces.Element.Provider.Class
+  ): DIInterfaces.ElementFactory {
     const deps = GfgHelper.getClassDependencies(el.useClass);
 
     const params: any[] = _.map(deps.params, (param) => {
@@ -90,53 +98,51 @@ export class Manager {
     }
   }
 
-  createDependency (node: TreeNode, elKey: Element.Key): any {
+  createDependency (node: TreeNode, elKey: Shared.Interfaces.Element.Key): DIInterfaces.ElementFactory {
     const tree = new Tree(node);
 
     const trees = _.unionBy([tree], this.config.globalTrees, 'value');
 
-    let activeNode: TreeNode,
-      dep: Element.UseProvider | Element.UseProvider[];
+    let activeNode: TreeNode;
     for (let i = 0; i < trees.length; i++) {
-      const treeIterator = trees[i].postorderTraversal();
-      for (treeIterator.start(); !treeIterator.isStoped(); treeIterator.next()) {
-        activeNode = treeIterator.value;
+      activeNode = this.findDependency(elKey, trees[i]);
 
-        const depFn = activeNode.container.getElementFn(elKey);
-        if (depFn) {
-          return depFn;
-        }
-
-        dep = activeNode.container.getElement(elKey);
-        if (!_.isNil(dep)) {
-          treeIterator.stop();
-        }
-      }
-
-      if (!_.isNil(dep)) {
+      if (!_.isUndefined(activeNode)) {
         break;
       }
     }
-
-    const depType = activeNode.container.getElementType(elKey);
 
     let newDepFn: any;
-    switch (depType) {
-      case ElementType.Value:
-        newDepFn = this.initValueElement(dep as Element.Provider.Value);
-        break;
-      case ElementType.Factory:
-        newDepFn = this.initFactoryElement(node, dep as Element.Provider.Factory);
-        break;
-      case ElementType.Class:
-        newDepFn = this.initClassElement(node, dep as Element.Provider.Class);
-        break;
-    }
-    activeNode.container.setElementFn(elKey, newDepFn);
+    // switch (depType) {
+    //   case ElementType.Value:
+    //     newDepFn = this.initValueElement(dep as Element.Provider.Value);
+    //     break;
+    //   case ElementType.Factory:
+    //     newDepFn = this.initFactoryElement(node, dep as Element.Provider.Factory);
+    //     break;
+    //   case ElementType.Class:
+    //     newDepFn = this.initClassElement(node, dep as Element.Provider.Class);
+    //     break;
+    // }
+    // activeNode.container.setElementFn(elKey, newDepFn);
     return newDepFn;
   }
 
-  findDependency (elKey: Element.Key): TreeNode {
-    return null;
+  findDependency (
+    elKey: Shared.Interfaces.Element.Key, tree: Tree,
+  ): TreeNode {
+    const treeIterator = tree.postorderTraversal();
+
+    for (treeIterator.start(); !treeIterator.isStoped(); treeIterator.next()) {
+      const node = treeIterator.value;
+      const elements = node.container.getElements(elKey);
+
+      if (elements.length !== 0) {
+        treeIterator.stop();
+        return node;
+      }
+    }
+
+    return undefined;
   }
 }

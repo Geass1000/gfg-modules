@@ -1,1 +1,1 @@
-export type ElementFunction = () => any;
+export type ElementFactory = () => any;
