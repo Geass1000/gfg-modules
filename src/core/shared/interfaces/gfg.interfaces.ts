@@ -1,4 +1,5 @@
 import { Token } from '../../token';
+import { InjectableScope } from '../enums/injectable.enums';
 
 export namespace Element {
   export type Key = Token | any;
@@ -29,6 +30,7 @@ export namespace Element {
 }
 
 export interface Injectable {
+  scope?: InjectableScope;
 }
 
 export interface Module {
