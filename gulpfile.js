@@ -44,15 +44,20 @@ process.on('exit', function() {
 });
 
 
+gulp.task('build:move-jts', gulp.series(function () {
+  return gulp.src(['./src/**/*.js', './src/**/*.d.ts'])
+    .pipe(gulp.dest('./dist'));
+}));
+
 gulp.task('build', gulp.series(function () {
   return gulp.src('./src/**/*.ts')
     .pipe(tsProject())
     .pipe(gulp.dest('./dist'));
-}));
+}, 'build:move-jts'));
 
 gulp.task('build:dev', gulp.series('tslint:dev', 'build'));
 
 gulp.task('watch', gulp.series('clean:dist', 'build:dev', 'server', function(done) {
-  gulp.watch(['./src/**/*.ts', './src/**/**/*.ts'], gulp.series('build:dev', 'server'));
+  gulp.watch(['./src/**/*.ts', './src/**/*.js'], gulp.series('build:dev', 'server'));
 	done();
 }));
