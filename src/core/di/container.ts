@@ -39,22 +39,32 @@ export class Container {
   private setElement (newElement: Element): void {
     const elements = this.getElements(newElement.key);
 
-    if (!elements.length) {
+    if (_.isEmpty(elements)) {
       this.storage.push(newElement);
       return;
     }
 
-    const multiToSingle = newElement.config.multi && !elements[0].config.multi;
-    const singleToMulti = !newElement.config.multi && elements[0].config.multi;
+    const newElIsMultiDep = this.isMultiDependency(newElement);
+    const oldElement = _.first(elements);
+    const oldElIsMultDep = this.isMultiDependency(oldElement);
+
+    const multiToSingle = newElIsMultiDep && !oldElIsMultDep;
+    const singleToMulti = !newElIsMultiDep && oldElIsMultDep;
+
     if (multiToSingle || singleToMulti) {
       throw new Error (`Mixing multi and non multi provider is not possible for token ${newElement.key}`);
     }
 
-    if (!newElement.config.multi) {
-      this.storage = _.unionBy([ newElement ], elements, 'key');
+    if (newElIsMultiDep) {
+      this.storage.push(newElement);
       return;
     }
 
-    this.storage.push(newElement);
+    this.storage = _.unionBy([ newElement ], elements, 'key');
+  }
+
+  isMultiDependency (element: Element) {
+    const isMulti = _.get(element, 'config.multi', false);
+    return isMulti;
   }
 }
