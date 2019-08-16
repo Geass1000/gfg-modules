@@ -1,4 +1,3 @@
-import { Container } from '../di/container';
 import { GfgHelper } from '../shared/gfg.helper';
 import * as GfgInterfaces from '../shared/interfaces/gfg.interfaces';
 

@@ -1,5 +1,4 @@
 import { GfgHelper } from './../shared/gfg.helper';
-import { Container } from '../di/container';
 import { Token } from '../token';
 import * as _ from 'lodash';
 
