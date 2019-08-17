@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
-import { ProviderStorageIterator } from './storage-iterator.provider';
-import { ProviderStorageElement } from './storage-element.provider';
+import { ProviderStorageIterator } from './provider-storage-iterator';
+import { ProviderStorageElement } from './provider-storage-element';
 import { InjectableInterfaces } from '../shared/interfaces';
 
 export class ProviderStorage {
@@ -20,13 +20,12 @@ export class ProviderStorage {
     return iterator;
   }
 
-  public bind (provider: InjectableInterfaces.InjectableProvider) {
+  public addProvider (provider: InjectableInterfaces.InjectableProvider) {
     const element = new ProviderStorageElement(provider);
-
-    this.setElement(element);
+    this.addElement(element);
   }
 
-  public getElements (
+  public getElementsByKey (
     elKey: InjectableInterfaces.InjectableKey,
   ): ProviderStorageElement[] {
     const elements = _.filter(this.storage, (element) => {
@@ -35,23 +34,23 @@ export class ProviderStorage {
     return elements;
   }
 
-  private setElement (newElement: ProviderStorageElement): void {
-    const elements = this.getElements(newElement.key);
+  private addElement (newElement: ProviderStorageElement): void {
+    const elements = this.getElementsByKey(newElement.key);
 
     if (_.isEmpty(elements)) {
       this.storage.push(newElement);
       return;
     }
 
-    const newElIsMultiDep = this.isMultiDependency(newElement);
+    const newElIsMultiProvider = this.isMultiProvider(newElement);
     const oldElement = _.first(elements);
-    const oldElIsMultDep = this.isMultiDependency(oldElement);
+    const oldElIsMultProvider = this.isMultiProvider(oldElement);
 
-    const multiToSingle = newElIsMultiDep && !oldElIsMultDep;
-    const singleToMulti = !newElIsMultiDep && oldElIsMultDep;
+    const multiToSingle = newElIsMultiProvider && !oldElIsMultProvider;
+    const singleToMulti = !newElIsMultiProvider && oldElIsMultProvider;
 
     if (multiToSingle || singleToMulti) {
-      throw new Error (`Mixing multi and non multi provider is not possible for ProviderStorageToken ${newElement.key}`);
+      throw new Error (`Mixing multi and non multi provider is not possible for Provider (${newElement.key})`);
     }
 
     if (newElIsMultiDep) {
@@ -62,7 +61,7 @@ export class ProviderStorage {
     this.storage = _.unionBy([ newElement ], elements, 'key');
   }
 
-  isMultiDependency (element: ProviderStorageElement) {
+  isMultiProvider (element: ProviderStorageElement) {
     const isMulti = _.get(element, 'config.multi', false);
     return isMulti;
   }
