@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 
-import { ProviderStorageElement } from './provider-storage-element';
+import { ProviderContainerElement } from './provider-container-element';
 
-export class ProviderStorageIterator {
+export class ProviderContainerIterator {
   private _index: number;
   public get index (): number {
     return this._index;
@@ -12,12 +12,12 @@ export class ProviderStorageIterator {
   private prevIndex: number;
   private isStopedFlag: boolean;
 
-  public get value (): ProviderStorageElement {
+  public get value (): ProviderContainerElement {
     return this.els[this.index];
   }
 
   constructor (
-    private els: ProviderStorageElement[],
+    private els: ProviderContainerElement[],
   ) {
     this.length = els.length;
   }

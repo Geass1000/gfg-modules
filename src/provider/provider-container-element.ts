@@ -4,7 +4,7 @@ import { InjectableInterfaces } from '../shared/interfaces';
 import { InjectableEnums } from '../shared/enums';
 import { MetadataHelper } from '../shared/helpers';
 
-export class ProviderStorageElement {
+export class ProviderContainerElement {
   private _factory?: InjectableInterfaces.FactoryFunction;
   public get factory (): InjectableInterfaces.FactoryFunction {
     return this._factory;

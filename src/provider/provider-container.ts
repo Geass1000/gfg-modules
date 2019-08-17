@@ -1,44 +1,44 @@
 import * as _ from 'lodash';
 
-import { ProviderStorageIterator } from './provider-storage-iterator';
-import { ProviderStorageElement } from './provider-storage-element';
+import { ProviderContainerIterator } from './provider-container-iterator';
+import { ProviderContainerElement } from './provider-container-element';
 import { InjectableInterfaces } from '../shared/interfaces';
 
-export class ProviderStorage {
-  private storage: ProviderStorageElement[];
+export class ProviderContainer {
+  private storage: ProviderContainerElement[];
 
-  static create (): ProviderStorage {
-    return new ProviderStorage();
+  static create (): ProviderContainer {
+    return new ProviderContainer();
   }
 
   private constructor () {
     this.storage = [];
   }
 
-  public getIterator (): ProviderStorageIterator {
-    const iterator = new ProviderStorageIterator(this.storage);
+  public getIterator (): ProviderContainerIterator {
+    const iterator = new ProviderContainerIterator(this.storage);
     return iterator;
   }
 
-  public getStorage (): ProviderStorageElement[] {
+  public getStorage (): ProviderContainerElement[] {
     return [ ...this.storage ];
   }
 
   public addProvider (provider: InjectableInterfaces.InjectableProvider) {
-    const element = new ProviderStorageElement(provider);
+    const element = new ProviderContainerElement(provider);
     this.addElement(element);
   }
 
   public getElementsByKey (
     elKey: InjectableInterfaces.InjectableKey,
-  ): ProviderStorageElement[] {
+  ): ProviderContainerElement[] {
     const elements = _.filter(this.storage, (element) => {
       return element.key === elKey;
     });
     return elements;
   }
 
-  private addElement (newElement: ProviderStorageElement): void {
+  private addElement (newElement: ProviderContainerElement): void {
     const elements = this.getElementsByKey(newElement.key);
 
     if (_.isEmpty(elements)) {
@@ -64,7 +64,7 @@ export class ProviderStorage {
     this.storage.push(newElement);
   }
 
-  isMultiProvider (element: ProviderStorageElement) {
+  isMultiProvider (element: ProviderContainerElement) {
     const isMulti = _.get(element, 'config.multi', false);
     return isMulti;
   }

@@ -5,13 +5,13 @@ export type PropertyKey = string | symbol;
 
 export interface PropertyDependency {
   key: PropertyKey;
-  // ProviderStorageToken for construction and property, any for property
+  // ProviderContainerToken for construction and property, any for property
   value: InjectableInterfaces.InjectableKey;
 }
 
 export interface ParameterDependency {
   index: number;
-  // ProviderStorageToken for construction and property, any for property
+  // ProviderContainerToken for construction and property, any for property
   value: InjectableInterfaces.InjectableKey;
 }
 

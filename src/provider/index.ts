@@ -1,4 +1,4 @@
-export * from './provider-storage-element';
-export * from './provider-storage-iterator';
-export * from './provider-storage';
+export * from './provider-container-element';
+export * from './provider-container-iterator';
+export * from './provider-container';
 export * from './provider-token';
