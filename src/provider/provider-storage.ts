@@ -53,12 +53,11 @@ export class ProviderStorage {
       throw new Error (`Mixing multi and non multi provider is not possible for Provider (${newElement.key})`);
     }
 
-    if (newElIsMultiDep) {
-      this.storage.push(newElement);
-      return;
+    if (!newElIsMultiProvider) {
+      throw new Error (`Provider (${newElement.key}) is a single provider and it alreay exists in storage`);
     }
 
-    this.storage = _.unionBy([ newElement ], elements, 'key');
+    this.storage.push(newElement);
   }
 
   isMultiProvider (element: ProviderStorageElement) {
