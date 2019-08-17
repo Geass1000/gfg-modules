@@ -13,4 +13,10 @@ export class App extends Singleton {
     const moduleTreeBuilder = Modules.ManagerBuilder.getInstance();
     await moduleTreeBuilder.build(rootModule);
   }
+
+  // private initModuleSystem (rootModule: any) {
+  //   const modulesManagerBuilder = Modules.ManagerBuilder.getInstance();
+  //   const moduleManager = modulesManagerBuilder.build(rootModule);
+  //   moduleManager.init();
+  // }
 }
