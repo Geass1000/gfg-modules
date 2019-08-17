@@ -12,7 +12,8 @@ export class Helper {
   static getPropertyDependencies (
     target: any,
   ): Interfaces.PropertyDependency[] {
-    return Reflect.getMetadata(Constants.PropertyDependencies, target);
+    const propDeps = Reflect.getMetadata(Constants.PropertyDependencies, target);
+    return propDeps || null;
   }
 
   static setPropertyDependencies (
@@ -36,7 +37,8 @@ export class Helper {
   static getParameterDependencies<T = any> (
     target: any,
   ): Interfaces.ParameterDependency[] {
-    return Reflect.getMetadata(Constants.ParameterDependencies, target);
+    const paramDeps = Reflect.getMetadata(Constants.ParameterDependencies, target);
+    return paramDeps || null;
   }
 
   static setParameterDependencies (
@@ -58,7 +60,8 @@ export class Helper {
    */
 
   static getDecoratorConfig<T> (target: any): T {
-    return Reflect.getMetadata(Constants.DecoratorConfig, target);
+    const config = Reflect.getMetadata(Constants.DecoratorConfig, target);
+    return config || null;
   }
 
   static setDecoratorConfig (config: any, target: any): void {
