@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import * as GfgModule from '../gfg-module';
+import * as GfgModule from '../module';
 
 import { Helper, Interfaces } from './shared';
 

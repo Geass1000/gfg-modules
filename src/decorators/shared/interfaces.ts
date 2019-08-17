@@ -1,4 +1,4 @@
-import * as GfgModule from '../../gfg-module';
+import * as GfgModule from '../../module';
 
 export type PropertyKey = string | symbol;
 
