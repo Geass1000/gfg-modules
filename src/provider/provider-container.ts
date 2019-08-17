@@ -15,6 +15,18 @@ export class ProviderContainer {
     this.storage = [];
   }
 
+  public clone () {
+    const containerClone = ProviderContainer.create();
+
+    const containerIterator = this.getIterator();
+    for (containerIterator.start(0); !containerIterator.isStoped(); containerIterator.next()) {
+      const elClone = containerIterator.value.clone();
+      containerClone.addElement(elClone);
+    }
+
+    return containerClone;
+  }
+
   public getIterator (): ProviderContainerIterator {
     const iterator = new ProviderContainerIterator(this.storage);
     return iterator;

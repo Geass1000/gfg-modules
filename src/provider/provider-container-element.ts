@@ -42,6 +42,12 @@ export class ProviderContainerElement {
     this.factory = null;
   }
 
+  clone () {
+    const providerClone = _.clone(this.config);
+    const elementClone = new ProviderContainerElement(providerClone);
+    return elementClone;
+  }
+
   initInjectableClass (provider: InjectableInterfaces.ClassType) {
     this._config = {
       provide: provider,
