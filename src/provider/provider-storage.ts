@@ -20,6 +20,10 @@ export class ProviderStorage {
     return iterator;
   }
 
+  public getStorage (): ProviderStorageElement[] {
+    return [ ...this.storage ];
+  }
+
   public addProvider (provider: InjectableInterfaces.InjectableProvider) {
     const element = new ProviderStorageElement(provider);
     this.addElement(element);
