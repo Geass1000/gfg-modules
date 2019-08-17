@@ -1,0 +1,29 @@
+import * as InjectableInterfaces from './injectable.interfaces';
+import { InjectableEnums } from '../enums';
+
+export type PropertyKey = string | symbol;
+
+export interface PropertyDependency {
+  key: PropertyKey;
+  // ProviderStorageToken for construction and property, any for property
+  value: InjectableInterfaces.InjectableKey;
+}
+
+export interface ParameterDependency {
+  index: number;
+  // ProviderStorageToken for construction and property, any for property
+  value: InjectableInterfaces.InjectableKey;
+}
+
+export namespace Decorator {
+  export interface Injectable {
+    scope?: InjectableEnums.InjectableScope;
+  }
+
+  export interface Module {
+    imports?: any[];
+    providers?: InjectableInterfaces.InjectableProvider[];
+    exports?: any[];
+  }
+}
+

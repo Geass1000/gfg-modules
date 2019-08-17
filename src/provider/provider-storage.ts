@@ -1,41 +1,41 @@
 import * as _ from 'lodash';
 
-import { ContainerIterator } from './container-iterator';
-import { ContainerElement } from './container-element';
-import { Interfaces } from './shared';
+import { ProviderStorageIterator } from './storage-iterator.provider';
+import { ProviderStorageElement } from './storage-element.provider';
+import { InjectableInterfaces } from '../shared/interfaces';
 
-export class ModuleContainer {
-  private storage: ContainerElement[];
+export class ProviderStorage {
+  private storage: ProviderStorageElement[];
 
-  static create (): ModuleContainer {
-    return new ModuleContainer();
+  static create (): ProviderStorage {
+    return new ProviderStorage();
   }
 
   private constructor () {
     this.storage = [];
   }
 
-  public getIterator (): ContainerIterator {
-    const iterator = new ContainerIterator(this.storage);
+  public getIterator (): ProviderStorageIterator {
+    const iterator = new ProviderStorageIterator(this.storage);
     return iterator;
   }
 
-  public bind (provider: Interfaces.Provider) {
-    const element = new ContainerElement(provider);
+  public bind (provider: InjectableInterfaces.InjectableProvider) {
+    const element = new ProviderStorageElement(provider);
 
     this.setElement(element);
   }
 
   public getElements (
-    elKey: Interfaces.Provider.InjectableKey,
-  ): ContainerElement[] {
+    elKey: InjectableInterfaces.InjectableKey,
+  ): ProviderStorageElement[] {
     const elements = _.filter(this.storage, (element) => {
       return element.key === elKey;
     });
     return elements;
   }
 
-  private setElement (newElement: ContainerElement): void {
+  private setElement (newElement: ProviderStorageElement): void {
     const elements = this.getElements(newElement.key);
 
     if (_.isEmpty(elements)) {
@@ -51,7 +51,7 @@ export class ModuleContainer {
     const singleToMulti = !newElIsMultiDep && oldElIsMultDep;
 
     if (multiToSingle || singleToMulti) {
-      throw new Error (`Mixing multi and non multi provider is not possible for token ${newElement.key}`);
+      throw new Error (`Mixing multi and non multi provider is not possible for ProviderStorageToken ${newElement.key}`);
     }
 
     if (newElIsMultiDep) {
@@ -62,7 +62,7 @@ export class ModuleContainer {
     this.storage = _.unionBy([ newElement ], elements, 'key');
   }
 
-  isMultiDependency (element: ContainerElement) {
+  isMultiDependency (element: ProviderStorageElement) {
     const isMulti = _.get(element, 'config.multi', false);
     return isMulti;
   }
