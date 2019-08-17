@@ -38,7 +38,10 @@ export class ProviderContainer {
     return elements;
   }
 
-  public addElement (newElement: ProviderContainerElement): void {
+  public addElement (
+    newElement: ProviderContainerElement,
+    throwSingleError: boolean = true,
+  ): void {
     const elements = this.getElementsByKey(newElement.key);
 
     if (_.isEmpty(elements)) {
@@ -57,11 +60,20 @@ export class ProviderContainer {
       throw new Error (`Mixing multi and non multi provider is not possible for Provider (${newElement.key})`);
     }
 
-    if (!newElIsMultiProvider) {
+    if (newElIsMultiProvider) {
+      this.storage.push(newElement);
+      return;
+    }
+
+    if (throwSingleError) {
       throw new Error (`Provider (${newElement.key}) is a single provider and it alreay exists in storage`);
     }
 
-    this.storage.push(newElement);
+    const oldElementIndex = _.findIndex(this.storage, (element) => {
+      return element.key === newElement.key;
+    });
+
+    this.storage[oldElementIndex] = newElement;
   }
 
   isMultiProvider (element: ProviderContainerElement) {
