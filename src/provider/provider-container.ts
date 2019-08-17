@@ -27,6 +27,23 @@ export class ProviderContainer {
     return containerClone;
   }
 
+  public merge (
+    providerContainer1: ProviderContainer,
+    ...restContainers: ProviderContainer[]
+  ): ProviderContainer {
+    const pc1Clone = providerContainer1.clone();
+
+    _.forEach(restContainers, (container) => {
+      const containerIterator = container.getIterator();
+      for (containerIterator.start(0); !containerIterator.isStoped(); containerIterator.next()) {
+        const elClone = containerIterator.value.clone();
+        pc1Clone.addElement(elClone, false);
+      }
+    });
+
+    return pc1Clone;
+  }
+
   public getIterator (): ProviderContainerIterator {
     const iterator = new ProviderContainerIterator(this.storage);
     return iterator;
