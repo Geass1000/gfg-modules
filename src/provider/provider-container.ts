@@ -38,7 +38,7 @@ export class ProviderContainer {
     return elements;
   }
 
-  private addElement (newElement: ProviderContainerElement): void {
+  public addElement (newElement: ProviderContainerElement): void {
     const elements = this.getElementsByKey(newElement.key);
 
     if (_.isEmpty(elements)) {
