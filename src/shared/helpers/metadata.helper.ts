@@ -66,22 +66,4 @@ export class MetadataHelper {
   static setDecoratorConfig (config: any, target: any): void {
     Reflect.defineMetadata(MetadataConstants.DecoratorConfig, config, target);
   }
-
-
-  static setGlobalModule (target: any): void {
-    Reflect.defineMetadata(MetadataConstants.GlobalModule, true, target);
-  }
-
-  static isGlobalModule (target: any): boolean {
-    return !!Reflect.getMetadata(MetadataConstants.GlobalModule, target);
-  }
-
-
-  static setInjectableClass (target: any): void {
-    Reflect.defineMetadata(MetadataConstants.InjectableClass, true, target);
-  }
-
-  static isInjectableClass (target: any): boolean {
-    return !!Reflect.getMetadata(MetadataConstants.InjectableClass, target);
-  }
 }
