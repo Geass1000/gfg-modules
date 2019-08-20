@@ -9,7 +9,7 @@ export class MetadataHelper {
    */
 
   static getPropertyDependencies (
-    target: any,
+    target: InjectableInterfaces.ClassType,
   ): MetadataInterfaces.PropertyDependency[] {
     const propDeps = Reflect.getMetadata(MetadataConstants.PropertyDependencies, target);
     return propDeps || null;
@@ -17,8 +17,8 @@ export class MetadataHelper {
 
   static setPropertyDependencies (
     value: InjectableInterfaces.InjectableKey,
-    target: any,
-    propertyKey: string | symbol,
+    target: InjectableInterfaces.ClassType,
+    propertyKey: InjectableInterfaces.InjectableKey,
   ): void {
     const oldDeps = this.getPropertyDependencies(target) || [];
     const newDep: MetadataInterfaces.PropertyDependency = {
@@ -34,7 +34,7 @@ export class MetadataHelper {
    */
 
   static getParameterDependencies<T = any> (
-    target: any,
+    target: InjectableInterfaces.ClassType,
   ): MetadataInterfaces.ParameterDependency[] {
     const paramDeps = Reflect.getMetadata(MetadataConstants.ParameterDependencies, target);
     return paramDeps || null;
@@ -42,7 +42,7 @@ export class MetadataHelper {
 
   static setParameterDependencies (
     value: InjectableInterfaces.InjectableKey,
-    target: any,
+    target: InjectableInterfaces.ClassType,
     index: number,
   ): void {
     const oldDeps = this.getParameterDependencies(target) || [];
@@ -58,12 +58,17 @@ export class MetadataHelper {
    * Config Deps
    */
 
-  static getDecoratorConfig<T> (target: any): T {
+  static getDecoratorConfig (
+    target: InjectableInterfaces.ClassType,
+  ): InjectableInterfaces.InjectableDecorator {
     const config = Reflect.getMetadata(MetadataConstants.DecoratorConfig, target);
     return config || null;
   }
 
-  static setDecoratorConfig (config: any, target: any): void {
+  static setDecoratorConfig (
+    config: InjectableInterfaces.InjectableDecorator,
+    target: InjectableInterfaces.ClassType,
+  ): void {
     Reflect.defineMetadata(MetadataConstants.DecoratorConfig, config, target);
   }
 }
