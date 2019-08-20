@@ -14,16 +14,3 @@ export interface ParameterDependency {
   // ProviderContainerToken for construction and property, any for property
   value: InjectableInterfaces.InjectableKey;
 }
-
-export namespace Decorator {
-  export interface Injectable {
-    scope?: InjectableEnums.InjectableScope;
-  }
-
-  export interface Module {
-    imports?: any[];
-    providers?: InjectableInterfaces.InjectableProvider[];
-    exports?: any[];
-  }
-}
-
