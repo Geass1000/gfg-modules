@@ -16,7 +16,10 @@ export class TreeNode<T = any> {
 
   private _value: any;
   public get value (): any {
-    return this._value.value;
+    return this._value;
+  }
+  public set value (newValue) {
+    this._value = newValue;
   }
 
   constructor (value: T) {
