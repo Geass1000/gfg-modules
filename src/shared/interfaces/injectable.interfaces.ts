@@ -33,9 +33,16 @@ export namespace InjectableElement {
 export type InjectableElement = InjectableElement.Class | InjectableElement.Value | InjectableElement.Factory;
 export type InjectableProvider = ClassType | InjectableElement;
 
+export interface GlobalInjectableImport {
+  element: ClassType;
+  isGlobal: boolean;
+}
+export type InjectableImport = ClassType | GlobalInjectableImport;
+export type InjectableExport = ClassType | InjectableKey;
+
 export interface InjectableDecorator {
   scope?: InjectableEnums.InjectableScope;
-  imports?: any[];
+  imports?: InjectableImport[];
   providers?: InjectableProvider[];
-  exports?: any[];
+  exports?: InjectableExport[];
 }
