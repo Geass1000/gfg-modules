@@ -29,12 +29,10 @@ export class ProviderContainerElement {
   }
 
   constructor (provider: InjectableInterfaces.InjectableProvider) {
-    const isClassElement = MetadataHelper.isInjectableClass(provider);
-
-    if (isClassElement) {
-      this.initInjectableClass(provider as InjectableInterfaces.ClassType);
-    } else {
+    if (_.has(provider, 'provide')) {
       this.initInjectableElement(provider as InjectableInterfaces.InjectableElement);
+    } else {
+      this.initInjectableClass(provider as InjectableInterfaces.ClassType);
     }
 
     this._type = this.getProviderType(this.config);
