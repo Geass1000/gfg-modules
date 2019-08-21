@@ -91,11 +91,9 @@ export class ModuleTreeBuilder {
         const globalTreeNode = this.buildTreeNode(null, globalComponent.element);
         // Add global tree node to array of global nodes
         this.globalNodes.push(globalTreeNode);
-        // Return null
-        return null;
+        // Return global node
+        return globalTreeNode;
       })
-      // Filter non null values
-      .filter((importComponent) => !_.isNull(importComponent))
       .value();
 
     // Set children to tree node of injectable component
