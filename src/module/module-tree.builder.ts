@@ -4,10 +4,11 @@ import { Tree, TreeNode } from '../core/tree';
 import { InjectableInterfaces } from '../shared/interfaces';
 import { MetadataHelper } from '../shared/helpers';
 import { ModuleTreeStore } from './module-tree.store';
-import { ProviderContainer } from 'provider';
+import { ProviderContainer } from '../provider';
+import { Interfaces } from './shared';
 
 export class ModuleTreeBuilder {
-  private globalNodes: TreeNode[];
+  private globalNodes: TreeNode<Interfaces.InjectableModule>[];
 
   /**
    * Creates an instance of module tree store.
@@ -35,7 +36,7 @@ export class ModuleTreeBuilder {
    */
   public buildAppTreeNode (
     rootComponent: InjectableInterfaces.ClassType,
-  ): TreeNode {
+  ): TreeNode<Interfaces.InjectableModule> {
     // Creates DI Tree for `root` module and global DITNs
     const rootNode = this.buildTreeNode(null, rootComponent);
     return rootNode;
@@ -49,9 +50,9 @@ export class ModuleTreeBuilder {
    * @returns TreeNode
    */
   public buildTreeNode (
-    parentTreeNode: TreeNode,
+    parentTreeNode: TreeNode<Interfaces.InjectableModule>,
     curComponent: InjectableInterfaces.ClassType,
-  ): TreeNode {
+  ): TreeNode<Interfaces.InjectableModule> {
     // Get config of injectable component
     const componentConfig = MetadataHelper.getDecoratorConfig(curComponent);
 
@@ -65,7 +66,7 @@ export class ModuleTreeBuilder {
     container.addProvider(curComponent);
 
     // Create tree node for injectable component
-    const node = new TreeNode({
+    const node = new TreeNode<Interfaces.InjectableModule>({
       component: curComponent,
       config: componentConfig,
       container: container,

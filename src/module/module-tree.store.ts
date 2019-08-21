@@ -1,25 +1,26 @@
 import { TreeNode } from '../core/tree';
+import { Interfaces } from './shared';
 
 export class ModuleTreeStore {
-  private _globalNodes: TreeNode[];
-  public get globalNodes (): TreeNode[] {
+  private _globalNodes: TreeNode<Interfaces.InjectableModule>[];
+  public get globalNodes (): TreeNode<Interfaces.InjectableModule>[] {
     return this._globalNodes;
   }
-  public set globalNodes (value: TreeNode[]) {
+  public set globalNodes (value: TreeNode<Interfaces.InjectableModule>[]) {
     this._globalNodes = value;
   }
 
-  private _appNode: TreeNode;
-  public get appNode (): TreeNode {
+  private _appNode: TreeNode<Interfaces.InjectableModule>;
+  public get appNode (): TreeNode<Interfaces.InjectableModule> {
     return this._appNode;
   }
-  public set appNode (value: TreeNode) {
+  public set appNode (value: TreeNode<Interfaces.InjectableModule>) {
     this._appNode = value;
   }
 
   constructor (
-    globalNodes: TreeNode[],
-    appNode: TreeNode,
+    globalNodes: TreeNode<Interfaces.InjectableModule>[],
+    appNode: TreeNode<Interfaces.InjectableModule>,
   ) {
     this._globalNodes = globalNodes;
     this._appNode = appNode;
