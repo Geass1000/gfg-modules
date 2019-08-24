@@ -1,24 +1,24 @@
 import * as _ from 'lodash';
 
 export class TreeNode<T = any> {
-  private _parent!: TreeNode;
-  public get parent (): TreeNode {
+  private _parent!: TreeNode<T>;
+  public get parent (): TreeNode<T> {
     return this._parent;
   }
-  public set parent (parentNode: TreeNode) {
+  public set parent (parentNode: TreeNode<T>) {
     this._parent = parentNode;
   }
 
-  private _children!: TreeNode[];
-  public get children (): TreeNode[] {
+  private _children!: TreeNode<T>[];
+  public get children (): TreeNode<T>[] {
     return [ ...this._children ];
   }
 
-  private _value: any;
-  public get value (): any {
+  private _value: T;
+  public get value (): T {
     return this._value;
   }
-  public set value (newValue) {
+  public set value (newValue: T) {
     this._value = newValue;
   }
 
@@ -33,7 +33,7 @@ export class TreeNode<T = any> {
    * @param  {TreeNode[]} children
    * @returns void
    */
-  public setChildren (children: TreeNode[]): void {
+  public setChildren (children: TreeNode<T>[]): void {
     this._children = [ ...children, ];
   }
 
@@ -43,7 +43,9 @@ export class TreeNode<T = any> {
    * @param  {TreeNode[]} children
    * @returns void
    */
-  public removeChild (child: TreeNode): void {
-    _.remove(this._children, child);
+  public removeChild (childForRemoving: TreeNode<T>): void {
+    this._children = _.reject(this._children, (child) => {
+      return child === childForRemoving;
+    });
   }
 }
