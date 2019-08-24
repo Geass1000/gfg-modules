@@ -10,19 +10,23 @@ export class DITreeBuilder {
 
   public build (moduleStore: ModuleTreeStore) {
     this.moduleStore = moduleStore;
+    const globalNodes = this.moduleStore.globalNodes;
     const rootNode = this.moduleStore.appNode;
 
-    const treeFromRootNode = new Tree(rootNode);
-    // const diTree = treeFromRootNode.createEmptyClone():
-    // const diTreeIterator = treeFromRootNode.getPreorderIterator();
-    const treeIterator = treeFromRootNode.getPreorderIterator();
-    for (treeIterator.start(); !treeIterator.isStoped(); treeIterator.next()) {
-      const treeNode = treeIterator.value;
-      const exportStore = this.buildExportStore(treeNode);
-      const diNodeList = this.buildDINodeList(treeNode);
+    const appNodes = [ ...globalNodes, rootNode ];
 
-      // TODO: set exportStore and diNodeList to DI Tree Node
-    }
+    _.map(appNodes, (appNode) => {
+      const treeFromAppNode = new Tree(appNode);
+      // const diTree = treeFromRootNode.createEmptyClone():
+      // const diTreeIterator = treeFromRootNode.getPreorderIterator();
+      const treeIterator = treeFromAppNode.getPreorderIterator();
+      for (treeIterator.start(); !treeIterator.isStoped(); treeIterator.next()) {
+        const treeNode = treeIterator.value;
+        const exportStore = this.buildExportStore(treeNode);
+        const diNodeList = this.buildDINodeList(treeNode);
+        // TODO: set exportStore and diNodeList to DI Tree Node
+      }
+    });
   }
 
   buildExportStore (node: TreeNode) {
