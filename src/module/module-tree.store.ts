@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import { TreeNode } from '../core/tree';
 import { Interfaces } from './shared';
 
@@ -24,5 +26,11 @@ export class ModuleTreeStore {
   ) {
     this._globalNodes = globalNodes;
     this._appNode = appNode;
+  }
+
+  isGlobalNode (node: TreeNode<Interfaces.InjectableModule>) {
+    return _.some(this._globalNodes, (globalNode) => {
+      return globalNode === node;
+    });
   }
 }
