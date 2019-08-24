@@ -5,7 +5,9 @@ import { MetadataInterfaces, InjectableInterfaces } from '../interfaces';
 
 export class InjectableHelper {
 
-  static getInjectableKey (provider: InjectableInterfaces.InjectableProvider) {
+  static getInjectableKey (
+    provider: InjectableInterfaces.InjectableProvider
+  ): InjectableInterfaces.InjectableKey {
     const providerKey = _.get(provider, 'provider', provider);
 
     if (_.isNil(providerKey)) {
@@ -15,7 +17,14 @@ export class InjectableHelper {
     return providerKey;
   }
 
-  static getClassDependencies (pvKey: InjectableInterfaces.InjectableKey) {
+  static isGlobalProvider (
+    provider: InjectableInterfaces.InjectableProvider
+  ): boolean {
+    const isGlobal = _.get(provider, 'isGlobal', false);
+    return isGlobal;
+  }
+
+  static getClassDependencies (pvKey: InjectableInterfaces.ClassType) {
     const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, pvKey) || [];
 
     const config: any = MetadataHelper.getDecoratorConfig(pvKey);
