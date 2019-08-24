@@ -41,6 +41,23 @@ export class DITreeBuilder {
   }
 
   buildDINodeList (node: TreeNode) {
-    // Build DI Node List
+    // Exclude from global nodes current node if it is a global node
+    const globalNodes = _.reject(this.moduleStore.globalNodes, (globalNode) => {
+      return globalNode === node;
+    });
+    // Create list of DI nodes
+    const diNodes = [ ...globalNodes, node ];
+
+    const sortedDiNodes: TreeNode[] = [];
+    // Build sorted DI Node List
+    _.map(diNodes, (diNode) => {
+      const diNodeTree = new Tree(diNode);
+      const diNodeTreeIterator = diNodeTree.getPostorderIterator();
+      for (diNodeTreeIterator.start(); !diNodeTreeIterator.isStoped(); diNodeTreeIterator.next()) {
+        sortedDiNodes.push(diNodeTreeIterator.value);
+      }
+    });
+
+    return sortedDiNodes;
   }
 }
