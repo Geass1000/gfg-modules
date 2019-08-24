@@ -37,7 +37,7 @@ export class ProviderContainer {
       const containerIterator = container.getIterator();
       for (containerIterator.start(0); !containerIterator.isStoped(); containerIterator.next()) {
         const elClone = containerIterator.value.clone();
-        pc1Clone.addElement(elClone, false);
+        pc1Clone.addElement(elClone);
       }
     });
 
@@ -69,7 +69,6 @@ export class ProviderContainer {
 
   public addElement (
     newElement: ProviderContainerElement,
-    throwSingleError: boolean = true,
   ): void {
     const elements = this.getElementsByKey(newElement.key);
 
@@ -92,10 +91,6 @@ export class ProviderContainer {
     if (newElIsMultiProvider) {
       this.storage.push(newElement);
       return;
-    }
-
-    if (throwSingleError) {
-      throw new Error (`Provider (${newElement.key}) is a single provider and it alreay exists in storage`);
     }
 
     const oldElementIndex = _.findIndex(this.storage, (element) => {
