@@ -36,4 +36,11 @@ export class BaseIterator {
   reset (): void {
     this.start();
   }
+
+  skipBranch () {
+    if (_.isNil(this._value) || _.isEmpty(this._value.children)) {
+      return;
+    }
+    this.nodeStack = _.difference(this.nodeStack, this._value.children);
+  }
 }
