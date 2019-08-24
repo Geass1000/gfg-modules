@@ -5,6 +5,16 @@ import { MetadataInterfaces, InjectableInterfaces } from '../interfaces';
 
 export class InjectableHelper {
 
+  static getInjectableKey (provider: InjectableInterfaces.InjectableProvider) {
+    const providerKey = _.get(provider, 'provider', provider);
+
+    if (_.isNil(providerKey)) {
+      throw new Error(`Provider not defined correct. Use correct 'Class Name' or 'Provider Token'`);
+    }
+
+    return providerKey;
+  }
+
   static getClassDependencies (pvKey: InjectableInterfaces.InjectableKey) {
     const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, pvKey) || [];
 
