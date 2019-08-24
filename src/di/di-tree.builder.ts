@@ -4,7 +4,7 @@ import { ModuleTreeStore } from '../module/module-tree.store';
 import { InjectableInterfaces } from '../shared/interfaces';
 import { Tree, TreeNode } from 'core/tree';
 
-export class CompilerBuilderDI {
+export class DITreeBuilder {
   private modules: InjectableInterfaces.ClassType[];
   private moduleStore: ModuleTreeStore;
 
