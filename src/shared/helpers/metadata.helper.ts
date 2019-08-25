@@ -18,7 +18,7 @@ export class MetadataHelper {
   static setPropertyDependencies (
     value: InjectableInterfaces.InjectableKey,
     target: InjectableInterfaces.ClassType,
-    propertyKey: InjectableInterfaces.InjectableKey,
+    propertyKey: string | symbol,
   ): void {
     const oldDeps = this.getPropertyDependencies(target) || [];
     const newDep: MetadataInterfaces.PropertyDependency = {
