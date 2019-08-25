@@ -44,24 +44,17 @@ export class DITreeBuilder {
     return exportStore;
   }
 
-  buildDINodeList (node: TreeNode) {
-    // Exclude from global nodes current node if it is a global node
-    const globalNodes = _.reject(this.moduleStore.globalNodes, (globalNode) => {
-      return globalNode === node;
-    });
-    // Create list of DI nodes
-    const diNodes = [ ...globalNodes, node ];
-
-    const sortedDiNodes: TreeNode[] = [];
+  buildProviderContainer (node: TreeNode<InjectableInterfaces.InjectableProvider>) {
     // Build sorted DI Node List
-    _.map(diNodes, (diNode) => {
-      const diNodeTree = new Tree(diNode);
-      const diNodeTreeIterator = diNodeTree.getPostorderIterator();
-      for (diNodeTreeIterator.start(); !diNodeTreeIterator.isStoped(); diNodeTreeIterator.next()) {
-        sortedDiNodes.push(diNodeTreeIterator.value);
-      }
-    });
+    const pvContainer = ProviderContainer.create();
+    const nodeTree = new Tree(node);
 
-    return sortedDiNodes;
+    const nodeTreeIterator = nodeTree.getPostorderIterator();
+    for (nodeTreeIterator.start(); !nodeTreeIterator.isStoped(); nodeTreeIterator.next()) {
+      const diTreeNode = nodeTreeIterator.value;
+      pvContainer.addProvider(diTreeNode.value);
+    }
+
+    return pvContainer;
   }
 }
