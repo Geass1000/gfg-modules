@@ -1,11 +1,13 @@
 import { ProviderToken } from '../../provider';
 import { InjectableEnums } from '../enums';
 
-export type FactoryFunction = (...restDeps: any[]) => any;
-
 export interface ClassType<T = any> extends Function {
   // tslint:disable-next-line
   new (...args: any[]): any;
+}
+
+export interface FactoryClass<T = any> extends ClassType {
+  build: () => T;
 }
 
 export type InjectableKey = ProviderToken | ClassType;
@@ -26,7 +28,7 @@ export namespace InjectableElement {
   }
 
   export interface Factory extends Base {
-    useFactory: FactoryFunction;
+    useFactory: FactoryClass;
     inject?: any[];
   }
 }
