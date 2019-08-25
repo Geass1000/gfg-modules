@@ -1,34 +1,34 @@
 import * as _ from 'lodash';
 
 import { TreeNode } from '../core/tree';
-import { InjectableInterfaces } from '../shared/interfaces';
+import { Interfaces } from './shared';
 
 export class ModuleTreeStore {
-  private _globalNodes: TreeNode<InjectableInterfaces.InjectableProvider>[];
-  public get globalNodes (): TreeNode<InjectableInterfaces.InjectableProvider>[] {
+  private _globalNodes: TreeNode<Interfaces.ModuleTreeNode>[];
+  public get globalNodes (): TreeNode<Interfaces.ModuleTreeNode>[] {
     return this._globalNodes;
   }
-  public set globalNodes (value: TreeNode<InjectableInterfaces.InjectableProvider>[]) {
+  public set globalNodes (value: TreeNode<Interfaces.ModuleTreeNode>[]) {
     this._globalNodes = value;
   }
 
-  private _appNode: TreeNode<InjectableInterfaces.InjectableProvider>;
-  public get appNode (): TreeNode<InjectableInterfaces.InjectableProvider> {
+  private _appNode: TreeNode<Interfaces.ModuleTreeNode>;
+  public get appNode (): TreeNode<Interfaces.ModuleTreeNode> {
     return this._appNode;
   }
-  public set appNode (value: TreeNode<InjectableInterfaces.InjectableProvider>) {
+  public set appNode (value: TreeNode<Interfaces.ModuleTreeNode>) {
     this._appNode = value;
   }
 
   constructor (
-    globalNodes: TreeNode<InjectableInterfaces.InjectableProvider>[],
-    appNode: TreeNode<InjectableInterfaces.InjectableProvider>,
+    globalNodes: TreeNode<Interfaces.ModuleTreeNode>[],
+    appNode: TreeNode<Interfaces.ModuleTreeNode>,
   ) {
     this._globalNodes = globalNodes;
     this._appNode = appNode;
   }
 
-  isGlobalNode (node: TreeNode<InjectableInterfaces.InjectableProvider>) {
+  isGlobalNode (node: TreeNode<Interfaces.ModuleTreeNode>) {
     return _.some(this._globalNodes, (globalNode) => {
       return globalNode === node;
     });

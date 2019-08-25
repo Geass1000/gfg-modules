@@ -4,10 +4,11 @@ import { TreeNode } from '../core/tree';
 import { InjectableInterfaces } from '../shared/interfaces';
 import { MetadataHelper, InjectableHelper } from '../shared/helpers';
 import { ModuleTreeStore } from './module-tree.store';
-import { ProviderToken } from '../provider';
+import { Interfaces } from './shared';
+import { ProviderToken, ProviderContainer } from '../provider';
 
 export class ModuleTreeBuilder {
-  private globalNodes: TreeNode<InjectableInterfaces.InjectableProvider>[];
+  private globalNodes: TreeNode<Interfaces.ModuleTreeNode>[];
 
   /**
    * Creates an instance of module tree store.
@@ -35,7 +36,7 @@ export class ModuleTreeBuilder {
    */
   public buildAppTreeNode (
     rootComponent: InjectableInterfaces.ClassType,
-  ): TreeNode<InjectableInterfaces.InjectableProvider> {
+  ): TreeNode<Interfaces.ModuleTreeNode> {
     // Creates DI Tree for `root` module and global DITNs
     const rootNode = this.buildTreeNode(null, rootComponent);
     return rootNode;
@@ -49,22 +50,44 @@ export class ModuleTreeBuilder {
    * @returns TreeNode
    */
   public buildTreeNode (
-    parentTreeNode: TreeNode<InjectableInterfaces.InjectableProvider>,
+    parentTreeNode: TreeNode<Interfaces.ModuleTreeNode>,
     provider: InjectableInterfaces.InjectableProvider,
-  ): TreeNode<InjectableInterfaces.InjectableProvider> {
+  ): TreeNode<Interfaces.ModuleTreeNode> {
+    // Get config of injectable component
+    const injectableKey = InjectableHelper.getInjectableKey(provider);
+
+    let injectableElement = injectableKey as InjectableInterfaces.ClassType;
+    if (_.has(provider, 'useClass')) {
+      injectableElement = (provider as InjectableInterfaces.InjectableElement.Class).useClass;
+    } else if (_.has(provider, 'useFactory')) {
+      injectableElement = (provider as InjectableInterfaces.InjectableElement.Factory).useFactory;
+    } else if (_.has(provider, 'provide')) {
+      injectableElement = null;
+    }
+
+    if (_.isNil(injectableElement)) {
+      return null;
+    }
+
+    const componentConfig = MetadataHelper.getDecoratorConfig(injectableElement);
+
+    if (_.isNil(componentConfig) || _.isEmpty(componentConfig.imports)) {
+      return null;
+    }
+
+    const pvContainer = ProviderContainer.create();
+    _.forEach(componentConfig.imports, (importProvider) => {
+      pvContainer.addProvider(importProvider);
+    });
+
     // Create tree node for injectable component
-    const providerNode = new TreeNode<InjectableInterfaces.InjectableProvider>(provider);
+    const providerNode = new TreeNode<Interfaces.ModuleTreeNode>({
+      key: injectableKey,
+      container: pvContainer,
+    });
     // Set parent of injectable component to parent tree node
     providerNode.parent = parentTreeNode;
 
-    // Get config of injectable component
-    const injectableKey = InjectableHelper.getInjectableKey(provider);
-    // Skip import iteration if injectable key is a token
-    if (injectableKey instanceof ProviderToken) {
-      return providerNode;
-    }
-
-    const componentConfig = MetadataHelper.getDecoratorConfig(injectableKey);
     // Iterate each import component of injectable component
     const providerNodes = _.chain(componentConfig.imports)
       .map((importProvider) => {
