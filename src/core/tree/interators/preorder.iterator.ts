@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { TreeNode } from '../tree-node';
 import { BaseIterator } from './base.iterator';
 
-export class PreorderIterator extends BaseIterator {
+export class PreorderIterator<TND> extends BaseIterator<TND> {
 
   next (): void {
     if (!this.nodeStack.length) {

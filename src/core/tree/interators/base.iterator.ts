@@ -2,18 +2,18 @@ import * as _ from 'lodash';
 
 import { TreeNode } from '../tree-node';
 
-export class BaseIterator {
-  protected nodeStack: TreeNode[];
+export class BaseIterator<TND> {
+  protected nodeStack: TreeNode<TND>[];
 
   protected isStopedFlag: boolean;
 
-  protected _value: TreeNode;
-  public get value (): TreeNode {
+  protected _value: TreeNode<TND>;
+  public get value (): TreeNode<TND> {
     return this._value;
   }
 
   constructor (
-    protected root: TreeNode,
+    protected root: TreeNode<TND>,
   ) {}
 
   start (): void {

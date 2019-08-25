@@ -3,8 +3,8 @@ import * as _ from 'lodash';
 import { TreeNode } from '../tree-node';
 import { BaseIterator } from './base.iterator';
 
-export class PostorderIterator extends BaseIterator {
-  private output: TreeNode[];
+export class PostorderIterator <TND> extends BaseIterator<TND> {
+  private output: TreeNode<TND>[];
 
   start () {
     this.output = [];
