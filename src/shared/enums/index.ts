@@ -1,5 +1,5 @@
-import * as InjectableEnums from './injectable.enums';
+import * as DIEnums from './di.enums';
 
 export {
-  InjectableEnums,
+  DIEnums,
 };

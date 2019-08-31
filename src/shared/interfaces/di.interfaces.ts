@@ -1,5 +1,5 @@
 import { ProviderToken } from '../../provider';
-import { InjectableEnums } from '../enums';
+import { DIEnums } from '../enums';
 
 export interface ComponentClass<T = any> extends Function {
   // tslint:disable-next-line
@@ -49,7 +49,7 @@ export type ComponentSectionElement = ComponentClass | ComponentProvider;
 export type ExportSectionElement = ComponentKey;
 
 export interface ComponentDecorator {
-  scope?: InjectableEnums.InjectableScope;
+  mode?: DIEnums.ComponentMode;
 }
 
 export interface ModuleDecorator {
