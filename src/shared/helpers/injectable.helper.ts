@@ -1,36 +1,36 @@
 import * as _ from 'lodash';
 
 import { MetadataHelper } from './metadata.helper';
-import { MetadataInterfaces, InjectableInterfaces } from '../interfaces';
+import * as Interfaces from '../interfaces';
 
 export class InjectableHelper {
 
   static getInjectableKey (
-    provider: InjectableInterfaces.InjectableProvider
-  ): InjectableInterfaces.InjectableKey {
-    const providerKey = _.get(provider, 'provider', provider);
+    componentElement: Interfaces.ComponentSectionElement
+  ): Interfaces.ComponentKey {
+    const componentKey = _.get(componentElement, 'key', componentElement);
 
-    if (_.isNil(providerKey)) {
-      throw new Error(`Provider not defined correct. Use correct 'Class Name' or 'Provider Token'`);
+    if (_.isNil(componentKey)) {
+      throw new Error(`Component not defined correct. Use correct 'Class Name' or 'Component Token'`);
     }
 
-    return providerKey;
+    return componentKey;
   }
 
-  static isGlobalProvider (
-    provider: InjectableInterfaces.InjectableProvider
+  static isGlobalModule (
+    importElement: Interfaces.ImportSectionElement
   ): boolean {
-    const isGlobal = _.get(provider, 'isGlobal', false);
+    const isGlobal = _.get(importElement, 'isGlobal', false);
     return isGlobal;
   }
 
-  static getClassDependencies (pvKey: InjectableInterfaces.ClassType) {
+  static getClassDependencies (pvKey: Interfaces.ComponentClass) {
     const classParams: any[] = Reflect.getMetadata(`design:paramtypes`, pvKey) || [];
 
     const config: any = MetadataHelper.getDecoratorConfig(pvKey);
-    const injectedParams: MetadataInterfaces.ParameterDependency[] =
+    const injectedParams: Interfaces.ComponentParameterDependency[] =
       MetadataHelper.getParameterDependencies(pvKey);
-    const injectedProps: MetadataInterfaces.PropertyDependency[] =
+    const injectedProps: Interfaces.ComponentPropertyDependency[] =
       MetadataHelper.getPropertyDependencies(pvKey);
 
     const injectedClassParams = _.map(classParams, (classParam, index) => {

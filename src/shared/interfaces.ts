@@ -1,5 +1,7 @@
-import { ProviderToken } from '../../provider';
-import { DIEnums } from '../enums';
+import { ComponentToken } from '../component';
+import * as Enums from './enums';
+
+export type FactoryFunction = () => any;
 
 export interface ComponentClass<T = any> extends Function {
   // tslint:disable-next-line
@@ -14,7 +16,7 @@ export interface ModuleClass<T = any> extends ComponentClass {
   config?: () => T;
 }
 
-export type ComponentKey = ProviderToken | ComponentClass;
+export type ComponentKey = ComponentToken | ComponentClass;
 
 export namespace ComponentProvider {
   export interface Base {
@@ -49,11 +51,25 @@ export type ComponentSectionElement = ComponentClass | ComponentProvider;
 export type ExportSectionElement = ComponentKey;
 
 export interface ComponentDecorator {
-  mode?: DIEnums.ComponentMode;
+  mode?: Enums.ComponentMode;
 }
 
 export interface ModuleDecorator {
   imports?: ImportSectionElement[];
   components?: ComponentSectionElement[];
   exports?: ExportSectionElement[];
+}
+
+export type ComponentPropertyKey = string | symbol;
+
+export interface ComponentPropertyDependency {
+  key: PropertyKey;
+  // ComponentContainerToken for construction and property, any for property
+  value: ComponentKey;
+}
+
+export interface ComponentParameterDependency {
+  index: number;
+  // ComponentContainerToken for construction and property, any for property
+  value: ComponentKey;
 }

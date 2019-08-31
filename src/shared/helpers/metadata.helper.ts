@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
-import { MetadataConstants } from '../constants';
-import { MetadataInterfaces, InjectableInterfaces } from '../interfaces';
+import * as Constants from '../constants';
+import * as Interfaces from '../interfaces';
 
 export class MetadataHelper {
   /**
@@ -9,24 +9,24 @@ export class MetadataHelper {
    */
 
   static getPropertyDependencies (
-    target: InjectableInterfaces.ClassType,
-  ): MetadataInterfaces.PropertyDependency[] {
-    const propDeps = Reflect.getMetadata(MetadataConstants.PropertyDependencies, target);
+    target: Interfaces.ComponentClass,
+  ): Interfaces.ComponentPropertyDependency[] {
+    const propDeps = Reflect.getMetadata(Constants.PropertyDependencies, target);
     return propDeps || null;
   }
 
   static setPropertyDependencies (
-    value: InjectableInterfaces.InjectableKey,
-    target: InjectableInterfaces.ClassType,
+    value: Interfaces.ComponentKey,
+    target: Interfaces.ComponentClass,
     propertyKey: string | symbol,
   ): void {
     const oldDeps = this.getPropertyDependencies(target) || [];
-    const newDep: MetadataInterfaces.PropertyDependency = {
+    const newDep: Interfaces.ComponentPropertyDependency = {
       key: propertyKey,
       value: value,
     };
     const newDeps = [ ...oldDeps, newDep ];
-    Reflect.defineMetadata(MetadataConstants.PropertyDependencies, newDeps, target);
+    Reflect.defineMetadata(Constants.PropertyDependencies, newDeps, target);
   }
 
   /**
@@ -34,24 +34,24 @@ export class MetadataHelper {
    */
 
   static getParameterDependencies<T = any> (
-    target: InjectableInterfaces.ClassType,
-  ): MetadataInterfaces.ParameterDependency[] {
-    const paramDeps = Reflect.getMetadata(MetadataConstants.ParameterDependencies, target);
+    target: Interfaces.ComponentClass,
+  ): Interfaces.ComponentParameterDependency[] {
+    const paramDeps = Reflect.getMetadata(Constants.ParameterDependencies, target);
     return paramDeps || null;
   }
 
   static setParameterDependencies (
-    value: InjectableInterfaces.InjectableKey,
-    target: InjectableInterfaces.ClassType,
+    value: Interfaces.ComponentKey,
+    target: Interfaces.ComponentClass,
     index: number,
   ): void {
     const oldDeps = this.getParameterDependencies(target) || [];
-    const newDep: MetadataInterfaces.ParameterDependency = {
+    const newDep: Interfaces.ComponentParameterDependency = {
       index: index,
       value: value,
     };
     const newDeps = [ ...oldDeps, newDep ];
-    Reflect.defineMetadata(MetadataConstants.ParameterDependencies, newDeps, target);
+    Reflect.defineMetadata(Constants.ParameterDependencies, newDeps, target);
   }
 
   /**
@@ -59,16 +59,16 @@ export class MetadataHelper {
    */
 
   static getDecoratorConfig (
-    target: InjectableInterfaces.ClassType,
-  ): InjectableInterfaces.InjectableDecorator {
-    const config = Reflect.getMetadata(MetadataConstants.DecoratorConfig, target);
+    target: Interfaces.ComponentClass,
+  ): Interfaces.ComponentDecorator | Interfaces.ModuleDecorator {
+    const config = Reflect.getMetadata(Constants.DecoratorConfig, target);
     return config || null;
   }
 
   static setDecoratorConfig (
-    config: InjectableInterfaces.InjectableDecorator,
-    target: InjectableInterfaces.ClassType,
+    config: Interfaces.ComponentDecorator | Interfaces.ModuleDecorator,
+    target: Interfaces.ComponentClass,
   ): void {
-    Reflect.defineMetadata(MetadataConstants.DecoratorConfig, config, target);
+    Reflect.defineMetadata(Constants.DecoratorConfig, config, target);
   }
 }
