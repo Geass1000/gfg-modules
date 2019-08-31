@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 
-import { InjectableInterfaces } from '../shared/interfaces';
+import { Interfaces } from '../shared';
 import { MetadataHelper } from '../shared/helpers';
 
-export function Inject (token: InjectableInterfaces.InjectableKey) {
+export function Inject (token: Interfaces.ComponentKey) {
   return (target: any, propertyKey: string | symbol, paramIndex?: number) => {
     const diKey = token || Reflect.getMetadata('design:type', target, propertyKey);
 
