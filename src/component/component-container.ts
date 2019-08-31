@@ -1,14 +1,14 @@
 import * as _ from 'lodash';
 
-import { ProviderContainerIterator } from './provider-container-iterator';
-import { ProviderContainerElement } from './provider-container-element';
-import { InjectableInterfaces } from '../shared/interfaces';
+import { ComponentContainerIterator } from './component-container-iterator';
+import { ComponentContainerElement } from './component-container-element';
+import { DIInterfaces } from '../shared/interfaces';
 
-export class ProviderContainer {
-  private storage: ProviderContainerElement[];
+export class ComponentContainer {
+  private storage: ComponentContainerElement[];
 
-  static create (): ProviderContainer {
-    return new ProviderContainer();
+  static create (): ComponentContainer {
+    return new ComponentContainer();
   }
 
   private constructor () {
@@ -16,7 +16,7 @@ export class ProviderContainer {
   }
 
   public clone () {
-    const containerClone = ProviderContainer.create();
+    const containerClone = ComponentContainer.create();
 
     const containerIterator = this.getIterator();
     for (containerIterator.start(0); !containerIterator.isStoped(); containerIterator.next()) {
@@ -28,10 +28,10 @@ export class ProviderContainer {
   }
 
   public merge (
-    providerContainer1: ProviderContainer,
-    ...restContainers: ProviderContainer[]
-  ): ProviderContainer {
-    const pc1Clone = providerContainer1.clone();
+    ComponentContainer1: ComponentContainer,
+    ...restContainers: ComponentContainer[]
+  ): ComponentContainer {
+    const pc1Clone = ComponentContainer1.clone();
 
     _.forEach(restContainers, (container) => {
       const containerIterator = container.getIterator();
@@ -44,23 +44,23 @@ export class ProviderContainer {
     return pc1Clone;
   }
 
-  public getIterator (): ProviderContainerIterator {
-    const iterator = new ProviderContainerIterator(this.storage);
+  public getIterator (): ComponentContainerIterator {
+    const iterator = new ComponentContainerIterator(this.storage);
     return iterator;
   }
 
-  public getStorage (): ProviderContainerElement[] {
+  public getStorage (): ComponentContainerElement[] {
     return [ ...this.storage ];
   }
 
-  public addProvider (provider: InjectableInterfaces.InjectableProvider) {
-    const element = new ProviderContainerElement(provider);
+  public addProvider (provider: DIInterfaces.ComponentSectionElement) {
+    const element = new ComponentContainerElement(provider);
     this.addElement(element);
   }
 
   public getElementsByKey (
-    elKey: InjectableInterfaces.InjectableKey,
-  ): ProviderContainerElement[] {
+    elKey: DIInterfaces.ComponentKey,
+  ): ComponentContainerElement[] {
     const elements = _.filter(this.storage, (element) => {
       return element.key === elKey;
     });
@@ -68,7 +68,7 @@ export class ProviderContainer {
   }
 
   public addElement (
-    newElement: ProviderContainerElement,
+    newElement: ComponentContainerElement,
   ): void {
     const elements = this.getElementsByKey(newElement.key);
 
@@ -100,7 +100,7 @@ export class ProviderContainer {
     this.storage[oldElementIndex] = newElement;
   }
 
-  isMultiProvider (element: ProviderContainerElement) {
+  isMultiProvider (element: ComponentContainerElement) {
     const isMulti = _.get(element, 'config.multi', false);
     return isMulti;
   }
