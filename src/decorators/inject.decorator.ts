@@ -1,14 +1,14 @@
 import * as _ from 'lodash';
 
 import { Interfaces } from '../shared';
-import { MetadataHelper } from '../shared/helpers';
+import { Helper } from '../shared';
 
 export function Inject (token: Interfaces.ComponentKey) {
   return (target: any, propertyKey: string | symbol, paramIndex?: number) => {
     const diKey = token || Reflect.getMetadata('design:type', target, propertyKey);
 
     if (_.isUndefined(paramIndex)) {
-      MetadataHelper.setPropertyDependencies(diKey, target.constructor, propertyKey);
+      Helper.setPropertyDependencies(diKey, target.constructor, propertyKey);
       return;
     }
 
@@ -16,6 +16,6 @@ export function Inject (token: Interfaces.ComponentKey) {
       throw new Error(`${target.name} (${paramIndex} -> ${token}). DI Key is required.`);
     }
 
-    MetadataHelper.setParameterDependencies(diKey, target, paramIndex);
+    Helper.setParameterDependencies(diKey, target, paramIndex);
   };
 }

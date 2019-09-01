@@ -1,8 +1,8 @@
 import { Interfaces } from '../shared';
-import { MetadataHelper } from '../shared/helpers';
+import { Helper } from '../shared';
 
 export function Module (config?: Interfaces.ModuleDecorator) {
   return <T extends new(...args: any[]) => {}>(target: T) => {
-    MetadataHelper.setDecoratorConfig(config, target);
+    Helper.setDecoratorConfig(config, target);
   };
 }
