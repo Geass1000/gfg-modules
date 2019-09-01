@@ -1,7 +1,7 @@
-import { InjectableInterfaces } from '../../shared/interfaces';
-import { ProviderContainer } from '../../provider';
+import { Interfaces as DIInterfaces } from '../../shared';
+import { ComponentContainer } from '../../component';
 
 export interface ModuleTreeNode {
-  key: InjectableInterfaces.InjectableKey;
-  container: ProviderContainer;
+  key: DIInterfaces.ModuleClass;
+  container: ComponentContainer;
 }

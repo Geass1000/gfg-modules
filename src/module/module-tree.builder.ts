@@ -1,11 +1,10 @@
 import * as _ from 'lodash';
 
 import { TreeNode } from '../core/tree';
-import { InjectableInterfaces } from '../shared/interfaces';
-import { MetadataHelper, InjectableHelper } from '../shared/helpers';
+import { Interfaces as DIInterfaces, Helper } from '../shared';
 import { ModuleTreeStore } from './module-tree.store';
 import { Interfaces } from './shared';
-import { ProviderToken, ProviderContainer } from '../provider';
+import { ComponentToken, ComponentContainer } from '../component';
 
 export class ModuleTreeBuilder {
   private globalNodes: TreeNode<Interfaces.ModuleTreeNode>[];
@@ -17,7 +16,7 @@ export class ModuleTreeBuilder {
    * @returns ModuleTreeStore
    */
   public build (
-    rootComponent: InjectableInterfaces.ClassType,
+    rootComponent: DIInterfaces.ModuleClass,
   ): ModuleTreeStore {
     this.globalNodes = [];
     // Build tree node of root injectable component
@@ -35,10 +34,10 @@ export class ModuleTreeBuilder {
    * @returns TreeNode
    */
   public buildAppTreeNode (
-    rootComponent: InjectableInterfaces.ClassType,
+    rootModule: DIInterfaces.ModuleClass,
   ): TreeNode<Interfaces.ModuleTreeNode> {
     // Creates DI Tree for `root` module and global DITNs
-    const rootNode = this.buildTreeNode(null, rootComponent);
+    const rootNode = this.buildTreeNode(null, rootModule);
     return rootNode;
   }
 
@@ -51,65 +50,48 @@ export class ModuleTreeBuilder {
    */
   public buildTreeNode (
     parentTreeNode: TreeNode<Interfaces.ModuleTreeNode>,
-    provider: InjectableInterfaces.InjectableProvider,
+    importElement: DIInterfaces.ImportSectionElement,
   ): TreeNode<Interfaces.ModuleTreeNode> {
     // Get config of injectable component
-    const injectableKey = InjectableHelper.getInjectableKey(provider);
+    const moduleKey = Helper.getModuleKey(importElement);
+    const moduleConfig = Helper.getDecoratorConfig(moduleKey) as DIInterfaces.ModuleDecorator;
 
-    let injectableElement = injectableKey as InjectableInterfaces.ClassType;
-    if (_.has(provider, 'useClass')) {
-      injectableElement = (provider as InjectableInterfaces.InjectableElement.Class).useClass;
-    } else if (_.has(provider, 'useFactory')) {
-      injectableElement = (provider as InjectableInterfaces.InjectableElement.Factory).useFactory;
-    } else if (_.has(provider, 'provide')) {
-      injectableElement = null;
-    }
-
-    if (_.isNil(injectableElement)) {
-      return null;
-    }
-
-    const componentConfig = MetadataHelper.getDecoratorConfig(injectableElement);
-
-    if (_.isNil(componentConfig) || _.isEmpty(componentConfig.imports)) {
-      return null;
-    }
-
-    const pvContainer = ProviderContainer.create();
-    _.forEach(componentConfig.imports, (importProvider) => {
-      pvContainer.addProvider(importProvider);
+    const cmpContainer = ComponentContainer.create();
+    _.forEach(moduleConfig.components, (component) => {
+      cmpContainer.addProvider(component);
     });
+    cmpContainer.addProvider(moduleKey);
 
     // Create tree node for injectable component
-    const providerNode = new TreeNode<Interfaces.ModuleTreeNode>({
-      key: injectableKey,
-      container: pvContainer,
+    const moduleNode = new TreeNode<Interfaces.ModuleTreeNode>({
+      key: moduleKey,
+      container: cmpContainer,
     });
-    // Set parent of injectable component to parent tree node
-    providerNode.parent = parentTreeNode;
 
     // Iterate each import component of injectable component
-    const providerNodes = _.chain(componentConfig.imports)
+    const importNodes = _.chain(moduleConfig.imports)
       .map((importProvider) => {
-        return this.buildTreeNode(providerNode, importProvider);
+        return this.buildTreeNode(moduleNode, importProvider);
       })
-      // Filter non null values
       .filter((importComponent) => !_.isNull(importComponent))
       .value();
 
+    // Set parent of injectable component to parent tree node
+    moduleNode.parent = parentTreeNode;
+
     // Set children to tree node of injectable component
-    providerNode.setChildren(providerNodes);
+    moduleNode.setChildren(importNodes);
 
     // Calculate `Is Global` flag of import component
-    const isGlobal = InjectableHelper.isGlobalProvider(provider);
+    const isGlobal = Helper.isGlobalModule(importElement);
 
     // If import component is a local component
     if (!isGlobal) {
-      return providerNode;
+      return moduleNode;
     }
 
     // Add global tree node to array of global nodes
-    this.globalNodes.push(providerNode);
+    this.globalNodes.push(moduleNode);
     // Return null
     return null;
   }
