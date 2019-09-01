@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import { ComponentContainerIterator } from './component-container-iterator';
 import { ComponentContainerElement } from './component-container-element';
-import { DIInterfaces } from '../shared/interfaces';
+import { Interfaces as DIInterfaces } from '../shared';
 
 export class ComponentContainer {
   private storage: ComponentContainerElement[];

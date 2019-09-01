@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 
 import { Enums, Interfaces } from '../shared';
-import { MetadataHelper } from '../shared/helpers';
 
 export class ComponentContainerElement {
   private _factory?: Interfaces.FactoryFunction;
