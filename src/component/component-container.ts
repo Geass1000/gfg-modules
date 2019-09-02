@@ -28,10 +28,10 @@ export class ComponentContainer {
   }
 
   public merge (
-    ComponentContainer1: ComponentContainer,
+    componentContainer1: ComponentContainer,
     ...restContainers: ComponentContainer[]
   ): ComponentContainer {
-    const pc1Clone = ComponentContainer1.clone();
+    const pc1Clone = componentContainer1.clone();
 
     _.forEach(restContainers, (container) => {
       const containerIterator = container.getIterator();
@@ -53,7 +53,7 @@ export class ComponentContainer {
     return [ ...this.storage ];
   }
 
-  public addProvider (provider: DIInterfaces.ComponentSectionElement) {
+  public addComponent (provider: DIInterfaces.ComponentSectionElement) {
     const element = new ComponentContainerElement(provider);
     this.addElement(element);
   }
@@ -77,9 +77,9 @@ export class ComponentContainer {
       return;
     }
 
-    const newElIsMultiProvider = this.isMultiProvider(newElement);
+    const newElIsMultiProvider = this.isMultiComponent(newElement);
     const oldElement = _.first(elements);
-    const oldElIsMultProvider = this.isMultiProvider(oldElement);
+    const oldElIsMultProvider = this.isMultiComponent(oldElement);
 
     const multiToSingle = newElIsMultiProvider && !oldElIsMultProvider;
     const singleToMulti = !newElIsMultiProvider && oldElIsMultProvider;
@@ -100,7 +100,7 @@ export class ComponentContainer {
     this.storage[oldElementIndex] = newElement;
   }
 
-  isMultiProvider (element: ComponentContainerElement) {
+  isMultiComponent (element: ComponentContainerElement) {
     const isMulti = _.get(element, 'config.multi', false);
     return isMulti;
   }

@@ -26,14 +26,14 @@ export class ComponentContainerElement {
     return this._config;
   }
 
-  constructor (provider: Interfaces.ComponentSectionElement) {
-    if (_.has(provider, 'provide')) {
-      this.initInjectableElement(provider as Interfaces.ComponentProvider);
+  constructor (component: Interfaces.ComponentSectionElement) {
+    if (_.has(component, 'provide')) {
+      this.initFromComponentProvider(component as Interfaces.ComponentProvider);
     } else {
-      this.initInjectableClass(provider as Interfaces.ComponentClass);
+      this.initFromComponentClass(component as Interfaces.ComponentClass);
     }
 
-    this._type = this.getProviderType(this.config);
+    this._type = this.getComponentProviderType(this.config);
 
     this.factory = null;
   }
@@ -44,7 +44,7 @@ export class ComponentContainerElement {
     return elementClone;
   }
 
-  initInjectableClass (componentClass: Interfaces.ComponentClass) {
+  initFromComponentClass (componentClass: Interfaces.ComponentClass) {
     this._config = {
       key: componentClass,
       useClass: componentClass,
@@ -52,12 +52,12 @@ export class ComponentContainerElement {
     this._key = componentClass;
   }
 
-  initInjectableElement (componentProvider: Interfaces.ComponentProvider) {
+  initFromComponentProvider (componentProvider: Interfaces.ComponentProvider) {
     this._config = componentProvider;
     this._key = componentProvider.key;
   }
 
-  private getProviderType (
+  private getComponentProviderType (
     useConifg: Interfaces.ComponentProvider,
   ): Enums.ComponentProviderType {
     if (!_.has(useConifg, 'useClass')) {

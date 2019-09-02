@@ -58,9 +58,9 @@ export class ModuleTreeBuilder {
 
     const cmpContainer = ComponentContainer.create();
     _.forEach(moduleConfig.components, (component) => {
-      cmpContainer.addProvider(component);
+      cmpContainer.addComponent(component);
     });
-    cmpContainer.addProvider(moduleKey);
+    cmpContainer.addComponent(moduleKey);
 
     // Create tree node for injectable component
     const moduleNode = new TreeNode<Interfaces.ModuleTreeNode>({
